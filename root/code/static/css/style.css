@@ -1,17 +1,15 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
+*{
+    margin: 0px;
 }
 
-h1 {
-    color: #333;
-    text-align: center;
-    padding: 20px 0;
+#form-body{
+    border: 1px solid grey;
+    width: 370px;
+    height: 350px;
+    margin: auto;
+    margin-top: 100px;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: salmon;
 }
 
-p {
-    color: #666;
-    text-align: center;
-}
