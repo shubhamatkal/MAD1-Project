@@ -16,7 +16,7 @@ def register():
 
 @app.route('/userdashboard', methods=['POST'])
 def user_dashboard():
-    user_data = {}
+    user_data = {"username": 'Shubham Atkal'}
     return render_template('userdash.html', user=user_data)
 
 @app.route('/library/login')

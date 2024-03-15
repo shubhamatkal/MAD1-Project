@@ -2,63 +2,237 @@
 <html lang="en">
 <head>
     <title>User Dashboard</title>
-    <link rel="stylesheet" href="static/dashboard.css">
+    <link rel="stylesheet" href="static/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
     <div id="main">
-        <div id="canvas">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                  <a class="navbar-brand" href="#">Fast Logistics</a>
-                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    <a class="nav-link active" aria-current="page" href="/userlogin">Logout</a>
-                    <span>{{user.username}}</span>
-                    
-                  </div>
-                </div>
-              </nav>
-            <h2 class="headings">Your Transactions</h2>
-            {% if transactions|length == 0 %}
-            <h3>You do not have any transaction.</h3>
-            {% else %}
-            <div id="trans-table">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Package Name</th>
-                    <th scope="col">Source</th>
-                    <th scope="col">Destination</th>
-                    <th scope="col">Date of request</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Payment</th>
-                  </tr>
-                </thead>
-                <tbody>
-                {% for trans in transactions %}  <!-- trans = <Transaction 2>-->
-                  <tr>
-                    <th scope="row">{{loop.index}}</th>
-                    <td>{{trans.t_name}}</td>
-                    <td>{{trans.s_city}}</td>
-                    <td>{{trans.d_city}}</td>
-                    <td>{{trans.t_date}}</td>
-                    <td>{{trans.internal_status}}</td>
-                    <td>to be notified</td>
-                  </tr>
-                {% endfor %}
-                </tbody>
-              </table>
+      <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+          <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+          <span class="fs-4">{{ user["username"] }}</span>
+        </a>
+        <ul class="nav nav-pills">
+          <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">Pricing</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
+          <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+        </ul>
+      </header>
+      <div class="text-center">
+        <h1>Lets discover books to read...</h1>
+      </div>
+
+      <div class="text-center mt-5 d-flex justify-content-center align-items-center me-md-auto">
+        <form class="w-25 me-2" role="search">
+            <div class="d-flex">
+              <input type="search" class="form-control" placeholder="Search Books..." aria-label="Search">
+              <div class="dropdown" style="margin-left: 15px;">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  All Sections
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                  <li><a class="dropdown-item active" href="#">History</a></li>
+                  <li><a class="dropdown-item" href="#">Geography</a></li>
+                  <li><a class="dropdown-item" href="#">Data Science</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#">All Sections</a></li>
+                </ul>
+              </div>
+              <button type="submit" class="btn btn-secondary " style="margin-left: 15px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                </svg>
+              </button>
             </div>
-            {% endif %}
-        <a href="/transaction_create/{{user.id}}"><button type="button" class="btn btn-primary">Create +</button></a>   
+        </form>
+      </div>
+      <div style="margin: 50px;">
+        <div style="text-align: left; margin-left: 50px;">
+          <h3>List of available books</h3>
         </div>
+        <div class="col-xs-8 col-xs-offset-2 well">
+          <table class="table table-scroll table-striped">
+              <thead>
+                  <tr>
+                      <th>#</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>County</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>1</td>
+                      <td>Andrew</td>
+                      <td>Jackson</td>
+                      <td>Washington</td>
+                  </tr>
+                  <tr>
+                      <td>2</td>
+                      <td>Thomas</td>
+                      <td>Marion</td>
+                      <td>Jackson</td>
+                  </tr>
+                  <tr>
+                      <td>3</td>
+                      <td>Benjamin</td>
+                      <td>Warren</td>
+                      <td>Lincoln</td>
+                  </tr>
+                  <tr>
+                      <td>4</td>
+                      <td>Grant</td>
+                      <td>Wayne</td>
+                      <td>Union</td>
+                  </tr>
+                  <tr>
+                      <td>5</td>
+                      <td>John</td>
+                      <td>Adams</td>
+                      <td>Marshall</td>
+                  </tr>
+                  <tr>
+                      <td>6</td>
+                      <td>Morgan</td>
+                      <td>Lee</td>
+                      <td>Lake</td>
+                  </tr>
+                  <tr>
+                      <td>7</td>
+                      <td>John</td>
+                      <td>Henry</td>
+                      <td>Brown</td>
+                  </tr>
+                  <tr>
+                      <td>8</td>
+                      <td>William</td>
+                      <td>Jacob</td>
+                      <td>Orange</td>
+                  </tr>
+                  <tr>
+                      <td>9</td>
+                      <td>Kelly</td>
+                      <td>Davidson</td>
+                      <td>Taylor</td>
+                  </tr>
+                  <tr>
+                      <td>10</td>
+                      <td>Colleen</td>
+                      <td>Hurst</td>
+                      <td>Randolph</td>
+                  </tr>
+                  <tr>
+                      <td>11</td>
+                      <td>Rhona</td>
+                      <td>Herrod</td>
+                      <td>Cumberland</td>
+                  </tr>
+                  <tr>
+                      <td>12</td>
+                      <td>Jane</td>
+                      <td>Paul</td>
+                      <td>Marshall</td>
+                  </tr>
+                  <tr>
+                      <td>13</td>
+                      <td>Ashton</td>
+                      <td>Fox</td>
+                      <td>Calhoun</td>
+                  </tr>
+                  <tr>
+                      <td>14</td>
+                      <td>Garrett</td>
+                      <td>John</td>
+                      <td>Madison</td>
+                  </tr>
+                  <tr>
+                      <td>15</td>
+                      <td>Fredie</td>
+                      <td>Winters</td>
+                      <td>Washington</td>
+                  </tr>
+                  <tr>
+                    <td>10</td>
+                    <td>Colleen</td>
+                    <td>Hurst</td>
+                    <td>Randolph</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>Rhona</td>
+                    <td>Herrod</td>
+                    <td>Cumberland</td>
+                </tr>
+                <tr>
+                    <td>12</td>
+                    <td>Jane</td>
+                    <td>Paul</td>
+                    <td>Marshall</td>
+                </tr>
+                <tr>
+                    <td>13</td>
+                    <td>Ashton</td>
+                    <td>Fox</td>
+                    <td>Calhoun</td>
+                </tr>
+                <tr>
+                    <td>14</td>
+                    <td>Garrett</td>
+                    <td>John</td>
+                    <td>Madison</td>
+                </tr>
+                <tr>
+                    <td>15</td>
+                    <td>Fredie</td>
+                    <td>Winters</td>
+                    <td>Washington</td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td>Colleen</td>
+                  <td>Hurst</td>
+                  <td>Randolph</td>
+              </tr>
+              <tr>
+                  <td>11</td>
+                  <td>Rhona</td>
+                  <td>Herrod</td>
+                  <td>Cumberland</td>
+              </tr>
+              <tr>
+                  <td>12</td>
+                  <td>Jane</td>
+                  <td>Paul</td>
+                  <td>Marshall</td>
+              </tr>
+              <tr>
+                  <td>13</td>
+                  <td>Ashton</td>
+                  <td>Fox</td>
+                  <td>Calhoun</td>
+              </tr>
+              <tr>
+                  <td>14</td>
+                  <td>Garrett</td>
+                  <td>John</td>
+                  <td>Madison</td>
+              </tr>
+              <tr>
+                  <td>15</td>
+                  <td>Fredie</td>
+                  <td>Winters</td>
+                  <td>Washington</td>
+              </tr>
+              </tbody>
+          </table>
+        </div>
+      </div>
+
+
+
     </div>
 </body>
 </html>

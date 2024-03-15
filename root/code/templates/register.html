@@ -8,25 +8,36 @@
 <body>
     <div id="main">
         <div id="canvas">
-            <div id="form-body">
+            <br> <br>
+            <h2 style="text-align: center; font-size:xx-large;" >Welcome, User!</h2> <!-- Greeting heading for users -->
+            <h3 style="text-align: center; font-size: large;">Let's Start Your Reading Journey</h3>
+            <div id="form-body">       
                 <h1>Register Form</h1>
                 <form action="/register" method="post">
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="username" placeholder="user123" name="u_name" required>
+                        <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" id="username" placeholder="Shubham03" name="u_name" required>
                     </div>
                     <div class="mb-3">
-                        <label for="pwd" class="form-label">Password</label>
+                        <label for="username" class="form-label">First Name<span style="color: red;">*</span></label>
+                        <input type="text" class="form-control" id="username" placeholder="Shubham" name="u_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="username" placeholder="Atkal" name="u_name" optional>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwd" class="form-label">Password<span style="color: red;">*</span></label>
                         <input type="password" class="form-control" id="pwd" name="pwd" required>
                     </div>
                     
-                  <input type="submit" class="btn btn-primary" value="Register"> 
-                 </form>
-                 <div style="text-align: center;">
-                  Are you a new user? <a href="./login">login.</a>
+                    <input type="submit" class="btn btn-primary" value="Register"> 
+                </form>
+                <div style="text-align: center;">
+                    Are you an old user? <a href="./login">Login.</a>
                 </div>
             </div>
-        </div>
-    </div>
-</body>
-</html>
+            </div>
+            </div>
+            </body>
+            </html>

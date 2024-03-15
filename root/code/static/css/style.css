@@ -5,11 +5,32 @@
 #form-body{
     border: 1px solid grey;
     width: 370px;
-    height: 350px;
+    height: auto;
     margin: auto;
-    margin-top: 100px;
+    margin-top: 30px;
     padding: 30px;
     border-radius: 10px;
     background-color: salmon;
 }
 
+/* style for list of books in user dashboard */
+.well {
+    background: none;
+    height: 320px;
+}
+
+.table-scroll tbody {
+    position: absolute;
+    overflow-y: scroll;
+    height: 250px;
+}
+
+.table-scroll tr {
+    width: 100%;
+    table-layout: fixed;
+    display: inline-table;
+}
+
+.table-scroll thead > tr > th {
+    border: none;
+}
