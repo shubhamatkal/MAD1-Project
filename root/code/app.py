@@ -19,6 +19,11 @@ def user_dashboard():
     user_data = {"username": 'Shubham Atkal'}
     return render_template('userdash.html', user=user_data)
 
+@app.route('/user/books', methods=['POST', 'GET'])
+def user_books():
+    user_data = {"username": 'Shubham Atkal'}
+    return render_template('userbooks.html', user=user_data)
+
 @app.route('/library/login')
 def librarian_login():
     return render_template('liblogin.html')

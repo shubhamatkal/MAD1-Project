@@ -2,8 +2,57 @@
 <html lang="en">
 <head>
     <title>Librarian Dashboard</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-    Welomce Librarian
+    <div id="main">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+          <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+            <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+            <span class="fs-4">IITM BS Library</span>
+          </a>
+          <ul class="nav nav-pills">
+            <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Books</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Stats</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Logout</a></li>
+          </ul>
+        </header>
+  
+        <div class="text-center mt-5 d-flex justify-content-center align-items-center me-md-auto">
+          <form class="w-25 me-2" role="search">
+              <div class="d-flex">
+                <input type="search" class="form-control" placeholder="Search Books..." aria-label="Search">
+                <div class="dropdown" style="margin-left: 15px;">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown button
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-secondary " style="margin-left: 15px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                  </svg>
+                </button>
+              </div>
+          </form>
+        </div>
+        <div style="margin: 50px;">
+          <div style="text-align: left; margin-left: 50px;">
+            <h3>Sections</h3>
+          </div>
+        <div>
+            Sections will come here
+        </div>
+
+        <div class="text-center">
+            <button type="button" class="btn btn-primary">Primary</button>
+        </div>
+    </div>
 </body>
 </html>
