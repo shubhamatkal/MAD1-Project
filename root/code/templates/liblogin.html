@@ -13,10 +13,10 @@
         <h3 style="text-align: center; font-size: large;">Login with your credientials</h3>
         <div id="form-body">
             <h1>Librarian Login</h1>
-            <form action="/library/home" method="post">
+            <form action="" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Shubham03" name="u_name" required>
+                    <input type="text" class="form-control" id="username" placeholder="eg. Shubham03" name="u_name" required>
                 </div>
                 <div class="mb-3">
                     <label for="pwd" class="form-label">Password</label>
@@ -25,7 +25,7 @@
                 <input type="submit" class="btn btn-primary" value="Login"> 
             </form>
             <div style="text-align: center;">
-                Don't have credientials? <a href="./register">register Library</a>
+                Don't have credientials? <a href="{{url_for('library/register')}}">register Library</a>
             </div>
         </div>
     </div>

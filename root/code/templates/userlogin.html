@@ -22,10 +22,14 @@
                     <label for="pwd" class="form-label">Password</label>
                     <input type="password" class="form-control" id="pwd" name="pwd" required>
                 </div>
+                
                 <input type="submit" class="btn btn-primary" value="Login"> 
             </form>
             <div style="text-align: center;">
-                Are you a new user? <a href="./register">register.</a>
+                Are you a new user? <a href="{{url_for('/user/register')}}">register.</a>
+            </div>
+            <div style="text-align: center;">
+                Looking for Library Login? <a href="{{url_for('/library/login')}}">Library Login</a>
             </div>
         </div>
     </div>
