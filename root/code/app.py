@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -14,10 +14,15 @@ def login():
 def register():
     return render_template('register.html')
 
-@app.route('/userdashboard', methods=['POST'])
+@app.route('/userdashboard', methods=['POST', 'GET'])
 def user_dashboard():
     user_data = {"username": 'Shubham Atkal'}
-    return render_template('userdash.html', user=user_data)
+    if request.method == 'POST':
+        return render_template('userdash.html', user=user_data)
+    elif request.method == 'GET':
+        # Handle the POST request here
+        # Add your code to process the form data
+        return render_template('userdash.html', user=user_data)
 
 @app.route('/user/books', methods=['POST', 'GET'])
 def user_books():
