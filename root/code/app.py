@@ -1,6 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for
-
+from flask import Flask, render_template
+from dotenv import load_dotenv
+import os
 app = Flask(__name__)
+
+
+
+load_dotenv()
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
+
 
 @app.route('/')
 def home():
@@ -10,7 +19,7 @@ def home():
 def login():
     return render_template('login.html')
 
-@app.route('/register')
+@app.route('/register', methods=['POST', 'GET'])
 def register():
     return render_template('register.html')
 
