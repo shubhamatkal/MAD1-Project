@@ -76,10 +76,10 @@ def register_post():
     
     password_hash = generate_password_hash(password)
     
-    new_user = User(username=username, passhash=password_hash, name=name)
-    db.session.add(new_user)
-    db.session.commit()
-    return redirect(url_for('login'))
+    # new_user = User(username=username, passhash=password_hash, name=name)
+    # db.session.add(new_user)
+    # db.session.commit()
+    # return redirect(url_for('login'))
 
 
 @app.route('/userdashboard', methods=['POST', 'GET'])
