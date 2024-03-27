@@ -45,3 +45,6 @@ class UserBook(db.Model):
     rating = db.Column(db.Integer, nullable=True)
     review = db.Column(db.String(500), nullable=True)
 
+
+with app.app_context():
+    db.create_all()

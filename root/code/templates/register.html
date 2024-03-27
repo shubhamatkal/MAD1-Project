@@ -13,22 +13,26 @@
             <h3 style="text-align: center; font-size: large;">Let's Start Your Reading Journey</h3>
             <div id="form-body">       
                 <h1>Register Form</h1>
-                <form action="/register" method="post">
+                <form action="" method="post">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
                         <input type="text" class="form-control" id="username" placeholder="Shubham03" name="u_name" required>
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">First Name<span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="username" placeholder="Shubham" name="u_name" required>
+                        <input type="text" class="form-control" id="username" placeholder="Shubham" name="first_name" required>
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="username" placeholder="Atkal" name="u_name" optional>
+                        <input type="text" class="form-control" id="username" placeholder="Atkal" name="last_name" optional>
                     </div>
                     <div class="mb-3">
                         <label for="pwd" class="form-label">Password<span style="color: red;">*</span></label>
-                        <input type="password" class="form-control" id="pwd" name="pwd" required>
+                        <input type="password" class="form-control" id="pwd" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwd" class="form-label">Confirm Password<span style="color: red;">*</span></label>
+                        <input type="password" class="form-control" id="pwd" name="c_password" required>
                     </div>
                     
                     <input type="submit" class="btn btn-primary" value="Register"> 

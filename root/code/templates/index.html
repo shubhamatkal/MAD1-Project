@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home-LMS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-    <h1>Welcome to Library</h1>
-    <p>This is the home page.</p>
+<body style="margin-left: 10px;">
+    <h1>Welcome to e-Library</h1>
+    <br>
+    <div class="buttons"></div>
+        <a style="margin-left: 10px; margin-bottom: 5px;" href="/login" class="btn btn-primary">User Login</a>
+        <a style="margin-left: 10px; margin-bottom: 5px;" href="/register" class="btn btn-primary">User Registration</a>
+        <a style="margin-left: 10px; margin-bottom: 5px;" href="/library/login" class="btn btn-primary">Library Login</a>
+        <a style="margin-left: 10px; margin-bottom: 5px;" href="/library/register" class="btn btn-primary">Library Registration</a>
+    </div>
 </body>
 </html>
