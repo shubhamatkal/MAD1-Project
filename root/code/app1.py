@@ -4,6 +4,7 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from model import User, Librarian, Section, Book, UserBook, db
+from datetime import date
 
 app = Flask(__name__)
 load_dotenv()
@@ -176,7 +177,7 @@ def librarian_register_post():
     new_user = Librarian(username=username, passhashed=password_hash, libraryname=libraryname)
     db.session.add(new_user)
     db.session.commit()
-    return redirect(url_for('librarian_register'))
+    return redirect(url_for('librarian_login'))
 
 
 @app.route('/library/home')
@@ -184,7 +185,57 @@ def librarian_dashboard():
     if 'lib_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('librarian_login'))
-    return render_template('libdash.html')
+    lib_id =  session['lib_id']
+    librarian = Librarian.query.filter_by(id=lib_id).first()
+    libname = librarian.libraryname
+    sections = Section.query.all()
+    section_list = []
+    for section in sections:
+        section_dict = {
+            'name': section.section_title,
+            'datecreated': section.date_created,
+            'description': section.description,
+            'id': section.id
+        }
+        section_list.append(section_dict)
+    return render_template('libdash.html', libinfo={"Name": libname}, sections=section_list)    
+
+@app.route('/library/addsection', methods=['GET', 'POST'])
+def add_section():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    
+    if request.method == 'GET':
+        return render_template('addsection.html')
+    if request.method == 'POST':
+        section_title = request.form.get('sectionName')
+        description = request.form.get('sectionDescription')
+        section_image = request.form.get('sectionImage')
+
+        new_section = Section(section_title=section_title, date_created=date.today(), description=description, Image=section_image)
+        db.session.add(new_section)
+        db.session.commit()
+        return redirect(url_for('librarian_dashboard'))
+
+@app.route('/library/addbook', methods=['GET', 'POST'])
+def add_book():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    if request.method == 'GET':
+        section_id = request.args.get('section_id')
+        return render_template('addbook.html', )
+    if request.method == 'POST':
+        section_id = request.args.get('section_id')
+        book_title = request.form.get('bookTitle')
+        author = request.form.get('author')
+        content = request.form.get('content')
+        book_image = request.form.get('bookImage')
+        new_book = Book(section_id=section_id, book_title=book_title, author=author, content=content, date_created=date.today(), Image=book_image)
+        db.session.add(new_book)
+        db.session.commit()
+        return redirect(url_for('librarian_dashboard'))
 
 @app.route('/forgot_password')
 def forgot_password():

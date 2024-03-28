@@ -1,0 +1,14 @@
+<form action="" method="POST">
+    <label for="sectionName">Section Name:</label>
+    <input type="text" id="sectionName" name="sectionName" required>
+    
+    <label for="sectionImage">Section Image:</label>
+    <input type="url" id="sectionImage" name="sectionImage">
+    
+    <label for="sectionDescription">Section Description:</label>
+    <textarea id="sectionDescription" name="sectionDescription" required></textarea>
+    
+    <input type="submit" value="Add Section">
+    <br>
+    <a href="{{url_for('librarian_dashboard')}}">Back to Dashboard</a>
+</form>

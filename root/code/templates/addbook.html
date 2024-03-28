@@ -1,0 +1,17 @@
+<form action="" method="POST">
+    <label for="bookTitle">Book Name:</label>
+    <input type="text" id="bookTitle" name="bookTitle" required>
+    <input type="hidden" name="section_id" value="{{ section_id }}">
+    <label for="author">Author </label>
+    <input type="text" id="author" name="author" required>
+    
+    <label for="bookImage">Book Image:</label>
+    <input type="url" id="bookImage" name="bookImage">
+    
+    <label for="content">Book Content link:</label>
+    <textarea id="content" name="content" required></textarea>
+    
+    <input type="submit" value="Add Section">
+    <br>
+</form>
+<a href="{{url_for('librarian_dashboard')}}">Back to Dashboard</a>
