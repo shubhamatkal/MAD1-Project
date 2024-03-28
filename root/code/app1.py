@@ -30,13 +30,14 @@ def logged_library_required(func):
         user = User.query.get(session['lib_id'])
     return inner
 
-def logged_user_required(func):
-    @wraps(func)
-    def inner(*args, **kwargs):
-        if 'user_id' not in session:
-            flash('Please login to continue')
-            return redirect(url_for('user_login'))
-    return inner
+# def logged_user_required(func):
+#     @wraps(func)
+#     def inner(*args, **kwargs):
+#         if 'user_id' not in session:
+#             flash('Please login to continue')
+#             return redirect(url_for('user_login'))
+#     print("done with wrapper ")
+#     return inner
 
 
 @app.route('/')
@@ -96,21 +97,33 @@ def user_register_post():
     db.session.commit()
     return redirect(url_for('user_login'))
 
-@app.route('/user/dashboard', methods=['POST', 'GET'])
-@logged_user_required
+
+
+@app.route('/user/dashboard')
+# @logged_user_required
 def user_dashboard():
-    if request.method == 'POST':
-        return "Not defined yet"
-    elif request.method == 'GET':
-        user_id =  session['user_id']
-        user = User.query.filter_by(id=user_id).first()
-        firstname_ = user.firstname
-        user_data = {"firstname": firstname_}
-        return render_template('userdash.html', user=user_data)
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    user_id =  session['user_id']
+    user = User.query.filter_by(id=user_id).first()
+    firstname_ = user.firstname
+    print(firstname_)
+    user_data = {"firstname": firstname_}
+    return render_template('userdash.html', user=user_data)
+
+@app.route('/user/dashboard', methods=['POST'])
+def user_dashboard_post():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    return "Not defined yet"
 
 @app.route('/user/books', methods=['POST', 'GET'])
-@logged_user_required
 def user_books():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
     user_data = {"username": 'Shubham Atkal'}
     return render_template('userbooks.html', user=user_data)
 
@@ -167,8 +180,10 @@ def librarian_register_post():
 
 
 @app.route('/library/home')
-@logged_library_required
 def librarian_dashboard():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
     return render_template('libdash.html')
 
 @app.route('/forgot_password')
@@ -176,14 +191,18 @@ def forgot_password():
     return render_template('forgot_password.html')
 
 @app.route('/user/logout')
-@logged_user_required
 def user_logout():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
     session.pop('user_id')
     return redirect(url_for('user_login'))
 
 @app.route('/library/logout')
-@logged_library_required
 def lib_logout():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
     session.pop('lib_id')
     return redirect(url_for('librarian_login'))
 
