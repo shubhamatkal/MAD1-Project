@@ -11,6 +11,18 @@
             <br> <br>
             <h2 style="text-align: center; font-size:xx-large;" >Welcome, User!</h2> <!-- Greeting heading for users -->
             <h3 style="text-align: center; font-size: large;">Let's Start Your Reading Journey</h3>
+            <div>
+                <br>
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-warning">
+                    {% for message in messages %}
+                    {{ message }}
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                {% endwith %}
+            </div>
             <div id="form-body">       
                 <h1>Register Form</h1>
                 <form action="" method="post">
@@ -38,7 +50,7 @@
                     <input type="submit" class="btn btn-primary" value="Register"> 
                 </form>
                 <div style="text-align: center;">
-                    Are you an old user? <a href="{{url_for('/user/login')}}">Login.</a>
+                    Are you an old user? <a href="{{url_for('user_login')}}">Login.</a>
                 </div>
             </div>
             </div>

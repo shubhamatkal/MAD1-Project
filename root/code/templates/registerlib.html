@@ -10,6 +10,18 @@
         <div id="canvas">
             <div id="form-body">
                 <h1>Register Your Library</h1>
+                <div>
+                    <br>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert alert-warning">
+                        {% for message in messages %}
+                        {{ message }}
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
                 <form action="" method="post">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
@@ -23,11 +35,14 @@
                         <label for="pwd" class="form-label">Password</label>
                         <input type="password" class="form-control" id="pwd" name="pwd" required>
                     </div>
-                    
+                    <div class="mb-3">
+                        <label for="pwd" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="pwd" name="c_pwd" required>
+                    </div>
                   <input type="submit" class="btn btn-primary" value="Register"> 
                  </form>
                  <div style="text-align: center;">
-                  Already Registered Librarian <a href="./login">login.</a>
+                  Already Registered Librarian <a href="{{url_for('librarian_login')}}">login.</a>
                 </div>
             </div>
         </div>

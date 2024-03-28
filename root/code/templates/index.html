@@ -11,10 +11,10 @@
     <h1>Welcome to e-Library</h1>
     <br>
     <div class="buttons"></div>
-        <a style="margin-left: 10px; margin-bottom: 5px;" href="/login" class="btn btn-primary">User Login</a>
-        <a style="margin-left: 10px; margin-bottom: 5px;" href="/register" class="btn btn-primary">User Registration</a>
-        <a style="margin-left: 10px; margin-bottom: 5px;" href="/library/login" class="btn btn-primary">Library Login</a>
-        <a style="margin-left: 10px; margin-bottom: 5px;" href="/library/register" class="btn btn-primary">Library Registration</a>
+        <a style="margin-left: 10px; margin-bottom: 5px;" href="{{url_for('user_login')}}" class="btn btn-primary">User Login</a>
+        <a style="margin-left: 10px; margin-bottom: 5px;" href="{{url_for('user_register')}}" class="btn btn-primary">User Registration</a>
+        <a style="margin-left: 10px; margin-bottom: 5px;" href="{{url_for('librarian_login')}}" class="btn btn-primary">Library Login</a>
+        <a style="margin-left: 10px; margin-bottom: 5px;" href="{{url_for('librarian_register')}}" class="btn btn-primary">Library Registration</a>
     </div>
 </body>
 </html>
