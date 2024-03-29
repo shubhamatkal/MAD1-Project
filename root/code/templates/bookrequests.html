@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Book Requests</title>
+</head>
+<body>
+    <h1>Books Requests</h1>
+    <ul>
+        <!-- Loop through the list of books and generate list items -->
+        {% for book in book_requests %}
+            <li>
+                {{ book }}
+                <a href="{{ url_for('view_details', r_id=book.id) }}" class="btn-view">View</a>
+                <a href="{{ url_for('grantboooks', r_id=book.id) }}" class="btn-grant">Grant</a>
+                <a href="{{ url_for('rejectbooks', r_id=book.id) }}" class="btn-reject">Reject</a>
+            </li>
+        {% endfor %}
+        {% if book_requests|length == 0 %}
+            <li>There are no book requests.</li>
+        {% endif %}
+    </ul>
+</body>
+</html>

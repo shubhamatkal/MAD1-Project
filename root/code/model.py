@@ -38,4 +38,11 @@ class UserBook(db.Model):
     rating = db.Column(db.Integer, nullable=True)
     review = db.Column(db.String(500), nullable=True)
 
-
+class BookRequests(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+    book_name = db.Column(db.String(80), db.ForeignKey('book.book_title'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    days_requested = db.Column(db.Integer, nullable=False)  

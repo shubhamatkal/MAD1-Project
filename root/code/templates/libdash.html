@@ -15,6 +15,7 @@
           </a>
           <ul class="nav nav-pills">
             <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Books</a></li>
+            <li class="nav-item"><a href="{{url_for('bookrequests')}}" class="nav-link">Book Requests</a></li>
             <li class="nav-item"><a href="#" class="nav-link">Stats</a></li>
             <li class="nav-item"><a href="{{url_for('lib_logout')}}" class="nav-link">Logout</a></li>
           </ul>
@@ -55,6 +56,7 @@
                 <h4>{{ section.name }}</h4>
                 <p>Date Created: {{ section.date_created }}</p>
                 <p>Description: {{ section.description }}</p>
+                <a href="{{url_for('library/showbooks', section_id=section.id)}}" class="btn btn-primary">Show all Books</a>
                 <a href="{{url_for('add_book', section_id=section.id)}}" class="btn btn-primary">Add Book</a>
               </div>
             {% endfor %}

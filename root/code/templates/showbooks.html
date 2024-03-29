@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Books in Section {{ section_id }}</title>
+</head>
+<body>
+    <h1>Books in Section {{ section_id }}</h1>
+    {% if books %}
+        <ul>
+        {% for book in books %}
+            <li>
+                <h2>{{ book.title }}</h2>
+                <p>Author: {{ book.author }}</p>
+                <p>Content: {{ book.content }}</p>
+                <img src="{{ book.image }}" alt="{{ book.title }}">
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No books found in this section.</p>
+    {% endif %}
+</body>
+</html>

@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-from model import User, Librarian, Section, Book, UserBook, db
+from model import User, Librarian, Section, Book, UserBook, db , BookRequests
 from datetime import date
 
 app = Flask(__name__)
@@ -20,7 +20,6 @@ with app.app_context():
     db.create_all()
 
 
-
 #defining the wrappers for auth, admin and user
 def logged_library_required(func):
     @wraps(func)
@@ -30,15 +29,6 @@ def logged_library_required(func):
             return redirect(url_for('librarian_login'))
         user = User.query.get(session['lib_id'])
     return inner
-
-# def logged_user_required(func):
-#     @wraps(func)
-#     def inner(*args, **kwargs):
-#         if 'user_id' not in session:
-#             flash('Please login to continue')
-#             return redirect(url_for('user_login'))
-#     print("done with wrapper ")
-#     return inner
 
 
 @app.route('/')
@@ -128,6 +118,8 @@ def user_books():
     user_data = {"username": 'Shubham Atkal'}
     return render_template('userbooks.html', user=user_data)
 
+#library routes
+
 @app.route('/library/login')
 def librarian_login():
     return render_template('liblogin.html')
@@ -200,6 +192,25 @@ def librarian_dashboard():
         section_list.append(section_dict)
     return render_template('libdash.html', libinfo={"Name": libname}, sections=section_list)    
 
+@app.route('/library/requests', methods=['GET'])
+def bookrequests():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    book_requests = BookRequests.query.all()
+    book_request_list = []
+    for request in book_requests:
+        request_dict = {
+            'id': request.id,
+            'book_title': request.book_title,
+            'author': request.author,
+            'user_id': request.user_id
+        }
+        book_request_list.append(request_dict)
+
+    return render_template('bookrequests.html', book_requests=book_request_list)
+
+
 @app.route('/library/addsection', methods=['GET', 'POST'])
 def add_section():
     if 'lib_id' not in session:
@@ -236,6 +247,75 @@ def add_book():
         db.session.add(new_book)
         db.session.commit()
         return redirect(url_for('librarian_dashboard'))
+
+@app.route('/library/showbooks/<int:section_id>', methods=['GET'])
+def show_books(section_id):
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    books = Book.query.filter_by(section_id=section_id).all()
+    book_list = []
+    for book in books:
+        book_dict = {
+            'title': book.book_title,
+            'author': book.author,
+            'content': book.content,
+            'image': book.Image
+        }
+        book_list.append(book_dict)
+    return render_template('showbooks.html', section_id=section_id, books=book_list)
+
+@app.route('/view_details/<int:r_id>')
+def view_details(r_id):
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    request = BookRequests.query.get(r_id)
+    if request:
+        book_request_info = {
+            'id': request.id,
+            'book_title': request.book_title,
+            'author': request.author,
+            'user_id': request.user_id
+        }
+        return render_template('viewdetails.html', request_info=book_request_info)
+    else:
+        flash('Invalid request ID')
+        return redirect(url_for('bookrequests'))
+    # Code to handle view details functionality
+    pass
+
+@app.route('/grantboooks/<int:r_id>')
+def grantboooks(r_id):
+    r_id = request.args.get('r_id')
+    request = BookRequests.query.get(r_id)
+    if request:
+        book_id = request.book_id
+        user_id = request.user_id
+    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
+    if user_book:
+        user_book.status = 'accepted'
+        db.session.commit()
+    else:
+        flash('UserBook tuple not found')
+    return redirect(url_for('bookrequests'))
+
+@app.route('/rejectbooks/<int:r_id>')
+def rejectbooks(r_id):
+    # Code to handle reject books functionality
+    r_id = request.args.get('r_id')
+    request = BookRequests.query.get(r_id)
+    if request:
+        book_id = request.book_id
+        user_id = request.user_id
+    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
+    if user_book:
+        user_book.status = 'rejected'
+        db.session.commit()
+    else:
+        flash('UserBook tuple not found')
+
+    return redirect(url_for('bookrequests'))
 
 @app.route('/forgot_password')
 def forgot_password():
