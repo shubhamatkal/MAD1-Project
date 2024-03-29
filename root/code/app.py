@@ -113,6 +113,40 @@ def user_dashboard():
         book_list.append(book_dict)
     user_data = {"firstname": firstname_, "userid": user_id}
 
+    # Pass the lists to the template
+    return render_template('userdash.html', user = user_data ,book_list = book_list)
+
+@app.route('/user/cancelbook')
+def cancel_book():
+    book_id = request.args.get('book_id')
+    user_id = request.args.get('user_id')
+    # print(book_id, user_id, "this is book id and user id")
+    user_book = UserBook.query.filter_by(book_id=book_id, user_id=user_id, status='requested').first()
+    user_request = BookRequests.query.filter_by(book_id=book_id, user_id=user_id).first()
+    if user_book:
+        db.session.delete(user_book)
+        db.session.delete(user_request)
+        db.session.commit()
+        # print("deleted book")
+    return redirect(url_for('user_books'))
+
+@app.route('/user/dashboard', methods=['POST'])
+def user_dashboard_post():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    return "Not defined yet"
+
+@app.route('/user/books', methods=['POST', 'GET'])
+def user_books():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    user_id = session['user_id']
+    user = User.query.filter_by(id=user_id).first()
+    firstname_ = user.firstname
+
+    
     # Fetching requested books
     requested_books = []
     book_requests = UserBook.query.filter_by(user_id=user_id, status='requested').all()
@@ -157,35 +191,8 @@ def user_dashboard():
             }
             completed_books.append(book_dict)
 
-    # Pass the lists to the template
-    return render_template('userdash.html', user = user_data ,book_list = book_list, requestedbooks=requested_books, currentbooks=current_books, completedbooks=completed_books)
-
-@app.route('/user/cancelbook')
-def cancel_book():
-    book_id = request.args.get('book_id')
-    user_id = request.args.get('user_id')
-    # print(book_id, user_id, "this is book id and user id")
-    user_book = UserBook.query.filter_by(book_id=book_id, user_id=user_id, status='requested').first()
-    if user_book:
-        db.session.delete(user_book)
-        db.session.commit()
-        # print("deleted book")
-    return redirect(url_for('user_dashboard'))
-
-@app.route('/user/dashboard', methods=['POST'])
-def user_dashboard_post():
-    if 'user_id' not in session:
-        flash('Please login to continue')
-        return redirect(url_for('user_login'))
-    return "Not defined yet"
-
-@app.route('/user/books', methods=['POST', 'GET'])
-def user_books():
-    if 'user_id' not in session:
-        flash('Please login to continue')
-        return redirect(url_for('user_login'))
-    user_data = {"username": 'Shubham Atkal'}
-    return render_template('userbooks.html', user=user_data)
+    user_data = {"firstname": firstname_, "userid": user_id}
+    return render_template('userbooks.html', user=user_data, requestedbooks=requested_books, currentbooks=current_books, completedbooks=completed_books )
 
 @app.route('/user/requestbook', methods=['GET'])
 def request_book():
@@ -216,7 +223,7 @@ def request_book():
     db.session.commit()
     
     flash('Book request submitted successfully')
-    return redirect(url_for('user_dashboard'))
+    return redirect(url_for('user_books'))
 
 @app.route('/user/return_book/<int:book_id>/<int:user_id>')
 def return_book(book_id, user_id):
@@ -224,8 +231,7 @@ def return_book(book_id, user_id):
     if user_book:
         user_book.status = 'completed'
         db.session.commit()
-    return redirect(url_for('user_dashboard'))
-
+    return redirect(url_for('user_books'))
 
 
 #library routes
@@ -312,8 +318,7 @@ def bookrequests():
     for request in book_requests:
         request_dict = {
             'id': request.id,
-            'book_title': request.book_title,
-            'author': request.author,
+            'book_title': request.book_name,
             'user_id': request.user_id
         }
         book_request_list.append(request_dict)
@@ -377,28 +382,28 @@ def show_books():
         book_list.append(book_dict)
     return render_template('showbooks.html', section_id=section_id, books=book_list)
 
-@app.route('/view_details/<int:r_id>')
-def view_details(r_id):
+@app.route('/library/view_book_details')
+def view_details():
     if 'lib_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('librarian_login'))
+    r_id = request.args.get('r_id')
     request = BookRequests.query.get(r_id)
     if request:
+        author = Book.query.get(request.book_id).author
         book_request_info = {
             'id': request.id,
-            'book_title': request.book_title,
-            'author': request.author,
+            'book_title': request.book_name,
+            'author': author,
             'user_id': request.user_id
         }
         return render_template('viewdetails.html', request_info=book_request_info)
     else:
         flash('Invalid request ID')
         return redirect(url_for('bookrequests'))
-    # Code to handle view details functionality
-    pass
 
-@app.route('/grantboooks/<int:r_id>')
-def grantboooks(r_id):
+@app.route('/library/grantboooks')
+def grantboooks():
     r_id = request.args.get('r_id')
     request = BookRequests.query.get(r_id)
     if request:
@@ -407,13 +412,14 @@ def grantboooks(r_id):
     user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
     if user_book:
         user_book.status = 'accepted'
+        db.session.delete(request)
         db.session.commit()
     else:
         flash('UserBook tuple not found')
     return redirect(url_for('bookrequests'))
 
-@app.route('/rejectbooks/<int:r_id>')
-def rejectbooks(r_id):
+@app.route('/library/rejectbooks')
+def rejectbooks():
     # Code to handle reject books functionality
     r_id = request.args.get('r_id')
     request = BookRequests.query.get(r_id)
@@ -422,7 +428,8 @@ def rejectbooks(r_id):
         user_id = request.user_id
     user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
     if user_book:
-        user_book.status = 'rejected'
+        db.session.delete(user_book)
+        db.session.delete(request)
         db.session.commit()
     else:
         flash('UserBook tuple not found')

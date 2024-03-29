@@ -14,7 +14,7 @@
           <span class="fs-4">{{ user["username"] }}</span>
         </a>
         <ul class="nav nav-pills">
-            <li class="nav-item"><a href="/userdashboard" class="nav-link">Books</a></li>
+            <li class="nav-item"><a href="{{url_for('user_dashboard')}}" class="nav-link">Books</a></li>
           <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">My Books</a></li>
           <li class="nav-item"><a href="#" class="nav-link">Stats</a></li>
           <li class="nav-item"><a href="/login" class="nav-link">Logout</a></li>
@@ -46,219 +46,115 @@
             </div>
         </form>
       </div>
-      <div style="margin: 50px;">
+      
+
+      <div style="text-align: left; margin-left: 50px;">
+        <h3>List of current books</h3>
+    </div>
+      <div class="col-xs-8 col-xs-offset-2 well">
+        <table class="table table-scroll table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Section</th>
+                    <th>Author</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if currentbooks %}
+                    {% for book in currentbooks %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ book["title"] }}</td>
+                            <td>{{ book["section"] }}</td>
+                            <td>{{ book["author"] }}</td>
+                            <td>
+                                <a href="{{ url_for('return_book', book_id=book['id'] , user_id=user['userid']) }}">Return</a>
+                                <a href="{{ url_for('view_book', book_id=book['id']) }}">View</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5">You dont have any books access currently.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+      
+    <div style="margin: 50px;"></div>
         <div style="text-align: left; margin-left: 50px;">
-          <h3>Current Books</h3>
+            <h3>List of completed books</h3>
         </div>
-        <div class="col-xs-8 col-xs-offset-2 well">
-          <table class="table table-scroll table-striped">
-              <thead>
-                  <tr>
-                      <th>#</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>County</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td>1</td>
-                      <td>Andrew</td>
-                      <td>Jackson</td>
-                      <td>Washington</td>
-                  </tr>
-                  <tr>
-                      <td>2</td>
-                      <td>Thomas</td>
-                      <td>Marion</td>
-                      <td>Jackson</td>
-                  </tr>
-                  <tr>
-                      <td>3</td>
-                      <td>Benjamin</td>
-                      <td>Warren</td>
-                      <td>Lincoln</td>
-                  </tr>
-                  <tr>
-                      <td>4</td>
-                      <td>Grant</td>
-                      <td>Wayne</td>
-                      <td>Union</td>
-                  </tr>
-                  <tr>
-                      <td>5</td>
-                      <td>John</td>
-                      <td>Adams</td>
-                      <td>Marshall</td>
-                  </tr>
-                  <tr>
-                      <td>6</td>
-                      <td>Morgan</td>
-                      <td>Lee</td>
-                      <td>Lake</td>
-                  </tr>
-                  <tr>
-                      <td>7</td>
-                      <td>John</td>
-                      <td>Henry</td>
-                      <td>Brown</td>
-                  </tr>
-                  <tr>
-                      <td>8</td>
-                      <td>William</td>
-                      <td>Jacob</td>
-                      <td>Orange</td>
-                  </tr>
-                  <tr>
-                      <td>9</td>
-                      <td>Kelly</td>
-                      <td>Davidson</td>
-                      <td>Taylor</td>
-                  </tr>
-                  <tr>
-                      <td>10</td>
-                      <td>Colleen</td>
-                      <td>Hurst</td>
-                      <td>Randolph</td>
-                  </tr>
-                  <tr>
-                      <td>11</td>
-                      <td>Rhona</td>
-                      <td>Herrod</td>
-                      <td>Cumberland</td>
-                  </tr>
-                  <tr>
-                      <td>12</td>
-                      <td>Jane</td>
-                      <td>Paul</td>
-                      <td>Marshall</td>
-                  </tr>
-                  <tr>
-                      <td>13</td>
-                      <td>Ashton</td>
-                      <td>Fox</td>
-                      <td>Calhoun</td>
-                  </tr>
-                  <tr>
-                      <td>14</td>
-                      <td>Garrett</td>
-                      <td>John</td>
-                      <td>Madison</td>
-                  </tr>
-              </tbody>
-          </table>
 
-
-
-
-        </div>
-        
-        <div style="text-align: left; margin-left: 50px;">
-            <h3>Completed Books</h3>
-          </div>
-          <div class="col-xs-8 col-xs-offset-2 well">
+        <div class="col-xs-8 col-xs-offset-2 well"></div>
             <table class="table table-scroll table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>County</th>
+                        <th>Title</th>
+                        <th>Section</th>
+                        <th>Author</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Andrew</td>
-                        <td>Jackson</td>
-                        <td>Washington</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Thomas</td>
-                        <td>Marion</td>
-                        <td>Jackson</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Benjamin</td>
-                        <td>Warren</td>
-                        <td>Lincoln</td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>Grant</td>
-                        <td>Wayne</td>
-                        <td>Union</td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>John</td>
-                        <td>Adams</td>
-                        <td>Marshall</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>Morgan</td>
-                        <td>Lee</td>
-                        <td>Lake</td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>John</td>
-                        <td>Henry</td>
-                        <td>Brown</td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>William</td>
-                        <td>Jacob</td>
-                        <td>Orange</td>
-                    </tr>
-                    <tr>
-                        <td>9</td>
-                        <td>Kelly</td>
-                        <td>Davidson</td>
-                        <td>Taylor</td>
-                    </tr>
-                    <tr>
-                        <td>10</td>
-                        <td>Colleen</td>
-                        <td>Hurst</td>
-                        <td>Randolph</td>
-                    </tr>
-                    <tr>
-                        <td>11</td>
-                        <td>Rhona</td>
-                        <td>Herrod</td>
-                        <td>Cumberland</td>
-                    </tr>
-                    <tr>
-                        <td>12</td>
-                        <td>Jane</td>
-                        <td>Paul</td>
-                        <td>Marshall</td>
-                    </tr>
-                    <tr>
-                        <td>13</td>
-                        <td>Ashton</td>
-                        <td>Fox</td>
-                        <td>Calhoun</td>
-                    </tr>
-                    <tr>
-                        <td>14</td>
-                        <td>Garrett</td>
-                        <td>John</td>
-                        <td>Madison</td>
-                    </tr>
+                    {% if completed_books %}
+                        {% for book in completed_books %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ book["title"] }}</td>
+                                <td>{{ book["section"] }}</td>
+                                <td>{{ book["author"] }}</td>
+                                <td><a href="{{ url_for('view_book', book_id=book['id']) }}">View</a></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">You haven't completed reading any book.</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
-  
-  
-  
-  
-          </div>
-      </div>
-    </div>
+        </div>
+
+
+        <div style="margin: 50px;"></div>
+        <div style="text-align: left; margin-left: 50px;">
+            <h3>List of requested books</h3>
+        </div>
+        <div class="col-xs-8 col-xs-offset-2 well"></div>
+            <table class="table table-scroll table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Section</th>
+                        <th>Author</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if requestedbooks %}
+                        {% for book in requestedbooks %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>{{ book["title"] }}</td>
+                                <td>{{ book["section"] }}</td>
+                                <td>{{ book["author"] }}</td>
+                                <td><a href="{{ url_for('cancel_book', book_id=book['id'],  user_id=user['userid']) }}">Cancel</a></td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">You haven't requested any book.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
 </body>
 </html>
