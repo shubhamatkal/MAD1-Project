@@ -248,11 +248,13 @@ def add_book():
         db.session.commit()
         return redirect(url_for('librarian_dashboard'))
 
-@app.route('/library/showbooks/<int:section_id>', methods=['GET'])
-def show_books(section_id):
+@app.route('/library/showbooks', methods=['GET'])
+def show_books():
     if 'lib_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('librarian_login'))
+    section_id = request.args.get('section_id')
+    print(section_id, "this is section id passed to showbooks")
     books = Book.query.filter_by(section_id=section_id).all()
     book_list = []
     for book in books:
