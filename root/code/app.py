@@ -13,7 +13,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = os.getenv('SQLALCHEMY_TRACK_MODIFICATIONS')
 
 
-
 db.init_app(app)
 
 with app.app_context():
@@ -99,9 +98,79 @@ def user_dashboard():
     user_id =  session['user_id']
     user = User.query.filter_by(id=user_id).first()
     firstname_ = user.firstname
-    print(firstname_)
-    user_data = {"firstname": firstname_}
-    return render_template('userdash.html', user=user_data)
+    books = Book.query.all()
+    book_list = []
+    for book in books:
+        section = Section.query.get(book.section_id)
+        if section:
+            book_dict = {
+            'title': book.book_title,
+            'section': section.section_title,
+            'author': book.author,
+            'id': book.id
+            }
+            book_list.append(book_dict)
+        book_list.append(book_dict)
+    user_data = {"firstname": firstname_, "userid": user_id}
+
+    # Fetching requested books
+    requested_books = []
+    book_requests = UserBook.query.filter_by(user_id=user_id, status='requested').all()
+    
+    for request in book_requests:
+        book = Book.query.get(request.book_id)
+        section_ = Section.query.get(book.section_id)
+        if book:
+            book_dict = {
+                'title': book.book_title,
+                'section': section_,
+                'author': book.author,
+                'id': book.id
+            }
+            requested_books.append(book_dict)
+
+    # Fetching current books
+    current_books = []
+    user_books = UserBook.query.filter_by(user_id=user_id, status='accepted').all()
+    for user_book in user_books:
+        book = Book.query.get(user_book.book_id)
+        if book:
+            book_dict = {
+                'title': book.title,
+                'section': book.section.section_title,
+                'author': book.author,
+                'id': book.id
+            }
+            current_books.append(book_dict)
+
+    # Fetching completed books
+    completed_books = []
+    user_books = UserBook.query.filter_by(user_id=user_id, status='completed').all()
+    for user_book in user_books:
+        book = Book.query.get(user_book.book_id)
+        if book:
+            book_dict = {
+                'title': book.title,
+                'section': book.section.section_title,
+                'author': book.author,
+                'id': book.id
+            }
+            completed_books.append(book_dict)
+
+    # Pass the lists to the template
+    return render_template('userdash.html', user = user_data ,book_list = book_list, requestedbooks=requested_books, currentbooks=current_books, completedbooks=completed_books)
+
+@app.route('/user/cancelbook')
+def cancel_book():
+    book_id = request.args.get('book_id')
+    user_id = request.args.get('user_id')
+    # print(book_id, user_id, "this is book id and user id")
+    user_book = UserBook.query.filter_by(book_id=book_id, user_id=user_id, status='requested').first()
+    if user_book:
+        db.session.delete(user_book)
+        db.session.commit()
+        # print("deleted book")
+    return redirect(url_for('user_dashboard'))
 
 @app.route('/user/dashboard', methods=['POST'])
 def user_dashboard_post():
@@ -117,6 +186,47 @@ def user_books():
         return redirect(url_for('user_login'))
     user_data = {"username": 'Shubham Atkal'}
     return render_template('userbooks.html', user=user_data)
+
+@app.route('/user/requestbook', methods=['GET'])
+def request_book():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    
+    user_id = session['user_id']
+    book_id = request.args.get('book_id')
+    book = Book.query.get(book_id)
+    if book:
+        section_id = book.section_id
+        # Rest of the code
+    else:
+        flash('Book not found')
+        return redirect(url_for('user_dashboard'))
+    book = Book.query.get(book_id)
+    if not book:
+        flash('Book not found')
+        return redirect(url_for('user_dashboard'))
+    book_title = book.book_title
+    author = book.author
+    # Add the request to BookRequests database
+    userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested')
+    new_request = BookRequests(book_name=book_title,book_id= book_id,section_id=section_id, user_id=user_id, date = date.today() ,days_requested=5)
+    db.session.add(new_request)
+    db.session.add(userbooks_entry)
+    db.session.commit()
+    
+    flash('Book request submitted successfully')
+    return redirect(url_for('user_dashboard'))
+
+@app.route('/user/return_book/<int:book_id>/<int:user_id>')
+def return_book(book_id, user_id):
+    user_book = UserBook.query.filter_by(book_id=book_id, user_id=user_id).first()
+    if user_book:
+        user_book.status = 'completed'
+        db.session.commit()
+    return redirect(url_for('user_dashboard'))
+
+
 
 #library routes
 
@@ -318,6 +428,22 @@ def rejectbooks(r_id):
         flash('UserBook tuple not found')
 
     return redirect(url_for('bookrequests'))
+
+
+@app.route('/view_book/<int:book_id>')
+def view_book(book_id):
+    if 'user_id' not in session and 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    book = Book.query.get(book_id)
+    if not book:
+        flash('Book not found')
+        if session.get('user_id'):
+            return redirect(url_for('user_dashboard'))
+        else:
+            return redirect(url_for('librarian_dashboard'))    
+    book_link = book.link
+    return render_template('view_book.html', book_link=book_link)
 
 @app.route('/forgot_password')
 def forgot_password():
