@@ -20,6 +20,18 @@
           <li class="nav-item"><a href="{{url_for('user_logout')}}" class="nav-link">Logout</a></li>
         </ul>
       </header>
+      <div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-warning">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+      <br>
       <div class="text-center">
         <h1>Lets discover books to read...</h1>
       </div>

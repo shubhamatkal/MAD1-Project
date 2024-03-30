@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from model import User, Librarian, Section, Book, UserBook, db , BookRequests
 from datetime import date
+from sqlalchemy.exc import IntegrityError
 
 app = Flask(__name__)
 load_dotenv()
@@ -206,7 +207,7 @@ def request_book():
     book_id = request.args.get('book_id')
     book = Book.query.get(book_id)
     if book:
-        section_id = book.section_id
+        pass
         # Rest of the code
     else:
         flash('Book not found')
@@ -215,11 +216,9 @@ def request_book():
     if not book:
         flash('Book not found')
         return redirect(url_for('user_dashboard'))
-    book_title = book.book_title
-    author = book.author
     # Add the request to BookRequests database
     userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested')
-    new_request = BookRequests(book_name=book_title,book_id= book_id,section_id=section_id, user_id=user_id, date = date.today() ,days_requested=5)
+    new_request = BookRequests(book_id= book_id, user_id=user_id, date = date.today() ,days_requested=5)
     db.session.add(new_request)
     db.session.add(userbooks_entry)
     db.session.commit()
@@ -285,8 +284,12 @@ def librarian_register_post():
     password_hash = generate_password_hash(password)
     
     new_user = Librarian(username=username, passhashed=password_hash, libraryname=libraryname)
-    db.session.add(new_user)
-    db.session.commit()
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+    except IntegrityError:
+        flash('You cannot register a library again. Please login using your credentials.')
+        return redirect(url_for('librarian_login'))
     return redirect(url_for('librarian_login'))
 
 
@@ -318,9 +321,11 @@ def bookrequests():
     book_requests = BookRequests.query.all()
     book_request_list = []
     for request in book_requests:
+        #book title needs to fetched from Book table
+        book_title = Book.query.get(request.book_id).book_title
         request_dict = {
             'id': request.id,
-            'book_title': request.book_name,
+            'book_title': book_title,
             'user_id': request.user_id
         }
         book_request_list.append(request_dict)
@@ -395,9 +400,10 @@ def view_details():
     book_request = BookRequests.query.get(r_id)
     if book_request:
         author = Book.query.get(book_request.book_id).author
+        book_title = Book.query.get(book_request.book_id).book_title
         book_request_info = {
             'id': book_request.id,
-            'book_title': book_request.book_name,
+            'book_title': book_title,
             'author': author,
             'user_id': book_request.user_id
         }
@@ -405,7 +411,6 @@ def view_details():
         return render_template('viewdetails.html', request_info=book_request_info)
     else:
         flash('Invalid request ID')
-        print("invalid")
         return redirect(url_for('bookrequests'))
 
 @app.route('/library/grantboooks')

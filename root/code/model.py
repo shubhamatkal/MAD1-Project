@@ -9,7 +9,7 @@ class User(db.Model):
     passhashed = db.Column(db.String(300), nullable=False)
 
 class Librarian(db.Model):
-    id = db.Column(db.Integer, primary_key=True)                                                                                                                                                     
+    id = db.Column(db.Integer, primary_key=True, default=1, unique=True, nullable=False)                                                                                                                                                     
     username = db.Column(db.String(80), unique=True, nullable=False)
     passhashed = db.Column(db.String(300), nullable=False)
     libraryname = db.Column(db.String(200), nullable=True)
@@ -39,10 +39,9 @@ class UserBook(db.Model):
     review = db.Column(db.String(500), nullable=True)
 
 class BookRequests(db.Model):
+    #no need of book name , and section id as we can get it from book id
     id = db.Column(db.Integer, primary_key=True)
-    section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
-    book_name = db.Column(db.String(80), db.ForeignKey('book.book_title'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     days_requested = db.Column(db.Integer, nullable=False)  

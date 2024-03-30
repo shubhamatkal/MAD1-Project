@@ -5,6 +5,21 @@
     <title>Book Requests</title>
 </head>
 <body>
+
+    <div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-warning">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+      <br>
+
+
     <h1>Books Requests</h1>
     <ul>
         <!-- Loop through the list of books and generate list items -->

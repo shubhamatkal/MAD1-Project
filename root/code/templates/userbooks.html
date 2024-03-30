@@ -48,6 +48,19 @@
       </div>
       
 
+      <div>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-warning">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+      </div>
+      <br>
+
       <div style="text-align: left; margin-left: 50px;">
         <h3>List of current books</h3>
     </div>
