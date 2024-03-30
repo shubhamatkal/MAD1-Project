@@ -1,9 +1,28 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Books in Section {{ section_id }}</title>
-</head>
+    <head>
+        <title>Show Books</title>
+        <link rel="stylesheet" href="static/style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    </head>
 <body>
+
+    <div class="text-center mt-5 d-flex justify-content-center align-items-center me-md-auto">
+        <form class="w-25 me-2" role="search" action="{{ url_for('show_books') }}" method="post">
+            <div class="d-flex">
+                <input type="search" class="form-control" placeholder="Search Books..." aria-label="Search" name="search_keyword">
+                <input type="hidden" name="section_id" value="{{ section_id }}">
+                <button type="submit" class="btn btn-secondary" style="margin-left: 15px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+      </div>
+
+
     <h1>Books in Section {{ section_id }}</h1>
     {% if books %}
         <ul>
@@ -19,5 +38,7 @@
     {% else %}
         <p>No books found in this section.</p>
     {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

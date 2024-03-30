@@ -370,14 +370,18 @@ def add_book():
         db.session.commit()
         return redirect(url_for('librarian_dashboard'))
 
-@app.route('/library/showbooks', methods=['GET'])
+@app.route('/library/showbooks', methods=['GET', 'POST'])
 def show_books():
     if 'lib_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('librarian_login'))
-    section_id = request.args.get('section_id')
-    print(section_id, "this is section id passed to showbooks")
-    books = Book.query.filter_by(section_id=section_id).all()
+    if request.method == 'POST':
+        section_id = request.form.get('section_id')
+        search_keyword = request.form.get('search_keyword')
+        books = Book.query.filter(Book.section_id == section_id, Book.book_title.ilike(f'%{search_keyword}%')).all()
+    else:
+        section_id = request.args.get('section_id')
+        books = Book.query.filter(Book.section_id == section_id).all()
     book_list = []
     for book in books:
         book_dict = {
