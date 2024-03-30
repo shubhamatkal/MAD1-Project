@@ -168,10 +168,11 @@ def user_books():
     user_books = UserBook.query.filter_by(user_id=user_id, status='accepted').all()
     for user_book in user_books:
         book = Book.query.get(user_book.book_id)
+        section_ = Section.query.get(book.section_id)
         if book:
             book_dict = {
-                'title': book.title,
-                'section': book.section.section_title,
+                'title': book.book_title,
+                'section': section_.section_title,
                 'author': book.author,
                 'id': book.id
             }
@@ -182,15 +183,16 @@ def user_books():
     user_books = UserBook.query.filter_by(user_id=user_id, status='completed').all()
     for user_book in user_books:
         book = Book.query.get(user_book.book_id)
+        section_ = Section.query.get(book.section_id)
         if book:
             book_dict = {
-                'title': book.title,
-                'section': book.section.section_title,
+                'title': book.book_title,
+                'section': section_.section_title,
                 'author': book.author,
                 'id': book.id
             }
             completed_books.append(book_dict)
-
+    print(completed_books, "this is completed books")
     user_data = {"firstname": firstname_, "userid": user_id}
     return render_template('userbooks.html', user=user_data, requestedbooks=requested_books, currentbooks=current_books, completedbooks=completed_books )
 

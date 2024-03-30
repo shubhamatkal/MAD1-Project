@@ -102,8 +102,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if completed_books %}
-                        {% for book in completed_books %}
+                    {% if completedbooks %}
+                        {% for book in completedbooks %}
                             <tr>
                                 <td>{{ loop.index }}</td>
                                 <td>{{ book["title"] }}</td>
