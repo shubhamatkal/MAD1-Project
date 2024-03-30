@@ -384,35 +384,40 @@ def show_books():
 
 @app.route('/library/view_book_details')
 def view_details():
+    print("now in view details function")
     if 'lib_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('librarian_login'))
     r_id = request.args.get('r_id')
-    request = BookRequests.query.get(r_id)
-    if request:
-        author = Book.query.get(request.book_id).author
+    print(r_id, "this is r_id for view books")
+    book_request = BookRequests.query.get(r_id)
+    if book_request:
+        author = Book.query.get(book_request.book_id).author
         book_request_info = {
-            'id': request.id,
-            'book_title': request.book_name,
+            'id': book_request.id,
+            'book_title': book_request.book_name,
             'author': author,
-            'user_id': request.user_id
+            'user_id': book_request.user_id
         }
+        print(book_request_info, "this is book request info")
         return render_template('viewdetails.html', request_info=book_request_info)
     else:
         flash('Invalid request ID')
+        print("invalid")
         return redirect(url_for('bookrequests'))
 
 @app.route('/library/grantboooks')
 def grantboooks():
     r_id = request.args.get('r_id')
-    request = BookRequests.query.get(r_id)
-    if request:
-        book_id = request.book_id
-        user_id = request.user_id
+    print(r_id, "this is r_id for grant books")
+    book_request = BookRequests.query.get(r_id)  # renamed 'request' to 'book_request'
+    if book_request:
+        book_id = book_request.book_id
+        user_id = book_request.user_id
     user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
     if user_book:
         user_book.status = 'accepted'
-        db.session.delete(request)
+        db.session.delete(book_request)
         db.session.commit()
     else:
         flash('UserBook tuple not found')
@@ -422,14 +427,14 @@ def grantboooks():
 def rejectbooks():
     # Code to handle reject books functionality
     r_id = request.args.get('r_id')
-    request = BookRequests.query.get(r_id)
-    if request:
-        book_id = request.book_id
-        user_id = request.user_id
+    book_request = BookRequests.query.get(r_id)
+    if book_request:
+        book_id = book_request.book_id
+        user_id = book_request.user_id
     user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
     if user_book:
         db.session.delete(user_book)
-        db.session.delete(request)
+        db.session.delete(book_request)
         db.session.commit()
     else:
         flash('UserBook tuple not found')
