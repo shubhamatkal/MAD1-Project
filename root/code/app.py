@@ -6,6 +6,7 @@ import os
 from model import User, Librarian, Section, Book, UserBook, db , BookRequests
 from datetime import date
 from sqlalchemy.exc import IntegrityError
+from flask import send_file
 
 app = Flask(__name__)
 load_dotenv()
@@ -260,6 +261,30 @@ def return_book(book_id, user_id):
         user_book.status = 'completed'
         db.session.commit()
     return redirect(url_for('user_books'))
+
+
+@app.route('/user/downloadbook', methods=['GET', 'POST'])
+def download_book():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    book_id = request.args.get('book_id')
+    user_id = request.args.get('user_id')
+    book = Book.query.get(book_id)
+    if request.method == 'POST':
+        user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
+        user_book.paid = True
+        db.session.commit()
+        book_link = book.link
+        return send_file(book_link, as_attachment=True)
+        
+    if UserBook.query.filter_by(user_id=user_id, book_id=book_id).first().paid == False:
+        flash('Please pay for the book before downloading')
+        return render_template('payment.html', book_id=book_id, user_id=user_id)
+    else:
+        book_link = book.link
+        return send_file(book_link, as_attachment=True)
+    
 
 
 #library routes

@@ -61,6 +61,7 @@
                             <td>
                                 <a href="{{ url_for('return_book', book_id=book['id'] , user_id=user['userid']) }}">Return</a>
                                 <a href="{{ url_for('view_book', book_id=book['id']) }}">View</a>
+                                <a href="{{ url_for('download_book', book_id=book['id'], user_id=user['userid']) }}">Download</a>
                             </td>
                         </tr>
                     {% endfor %}
