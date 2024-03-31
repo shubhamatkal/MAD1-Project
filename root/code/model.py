@@ -27,6 +27,7 @@ class Book(db.Model):
     book_title = db.Column(db.String(80), unique=True, nullable=False)
     author = db.Column(db.String(80), nullable=False)
     content = db.Column(db.String(500), nullable=True)
+    link = db.Column(db.String(300), nullable=True)
     date_created = db.Column(db.DateTime, nullable=False)
     Image = db.Column(db.String(300), nullable=True)
 

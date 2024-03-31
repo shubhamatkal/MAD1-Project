@@ -20,7 +20,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-
 #defining the wrappers for auth, admin and user
 def logged_library_required(func):
     @wraps(func)
@@ -94,6 +93,7 @@ def user_register_post():
 @app.route('/user/dashboard', methods=['GET', 'POST'])
 # @logged_user_required
 def user_dashboard():
+    search_keyword = "sample"
     if 'user_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('user_login'))
@@ -117,19 +117,19 @@ def user_dashboard():
         books = Book.query.all()
     book_list = []
     section_list = []
-    print(search_keyword, "!!!!this is search keyword")
     for book in books:
         section = Section.query.get(book.section_id)
-        if search_keyword and search_keyword != None:
-            print("search keyword is not none or is available")
-            if search_keyword.lower() in book.book_title.lower():
-                book_dict = {
-                    'title': book.book_title,
-                    'section': section.section_title,
-                    'author': book.author,
-                    'id': book.id
-                    }
-                book_list.append(book_dict)
+        if search_keyword != "sample":
+            if search_keyword != None:
+                print("search keyword is not none or is available")
+                if search_keyword.lower() in book.book_title.lower():
+                    book_dict = {
+                        'title': book.book_title,
+                        'section': section.section_title,
+                        'author': book.author,
+                        'id': book.id
+                        }
+                    book_list.append(book_dict)
         else:
             print("search keyword is none or not available")
             book_dict = {
@@ -245,7 +245,7 @@ def request_book():
         flash('Book not found')
         return redirect(url_for('user_dashboard'))
     # Add the request to BookRequests database
-    userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested')
+    userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested', paid = False)
     new_request = BookRequests(book_id= book_id, user_id=user_id, date = date.today() ,days_requested=5)
     db.session.add(new_request)
     db.session.add(userbooks_entry)
@@ -276,14 +276,37 @@ def download_book():
         user_book.paid = True
         db.session.commit()
         book_link = book.link
-        return send_file(book_link, as_attachment=True)
-        
+        return redirect(book_link)        
     if UserBook.query.filter_by(user_id=user_id, book_id=book_id).first().paid == False:
         flash('Please pay for the book before downloading')
-        return render_template('payment.html', book_id=book_id, user_id=user_id)
+        bookDetails = {
+            'book_id': book_id,
+            'title': book.book_title,
+            'author': book.author,
+            'price': '100'
+        }
+        userDetails = {
+            'user_id': user_id,
+            'name': User.query.get(user_id).firstname
+        }
+        
+        return render_template('payment.html', bookDetails = bookDetails, userDetails = userDetails)
     else:
         book_link = book.link
-        return send_file(book_link, as_attachment=True)
+        return redirect(book_link)    
+
+@app.route('/user/view_book')
+def view_book():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    book_id = request.args.get('book_id')
+    book = Book.query.get(book_id)
+    if not book:
+        flash('Book not found')
+        return redirect(url_for('user_dashboard'))
+    book_link = book.link
+    return render_template('viewbook.html', pdfLink=book_link)    
     
 
 
@@ -440,8 +463,9 @@ def add_book():
         book_title = request.form.get('bookTitle')
         author = request.form.get('author')
         content = request.form.get('content')
+        link = request.form.get('link')
         book_image = request.form.get('bookImage')
-        new_book = Book(section_id=section_id, book_title=book_title, author=author, content=content, date_created=date.today(), Image=book_image)
+        new_book = Book(section_id=section_id, book_title=book_title, author=author, content=content, date_created=date.today(), Image=book_image, link = link)
         db.session.add(new_book)
         db.session.commit()
         return redirect(url_for('librarian_dashboard'))
@@ -528,21 +552,6 @@ def rejectbooks():
 
     return redirect(url_for('bookrequests'))
 
-
-@app.route('/view_book/<int:book_id>')
-def view_book(book_id):
-    if 'user_id' not in session and 'lib_id' not in session:
-        flash('Please login to continue')
-        return redirect(url_for('user_login'))
-    book = Book.query.get(book_id)
-    if not book:
-        flash('Book not found')
-        if session.get('user_id'):
-            return redirect(url_for('user_dashboard'))
-        else:
-            return redirect(url_for('librarian_dashboard'))    
-    book_link = book.link
-    return render_template('view_book.html', book_link=book_link)
 
 @app.route('/forgot_password')
 def forgot_password():

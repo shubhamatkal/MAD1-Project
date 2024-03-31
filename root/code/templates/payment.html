@@ -4,6 +4,12 @@
 	<title>Book Payment</title>
 </head>
 <body>
+	{% if flash_message %}
+		<div class="flash-message">
+			{{ flash_message }}
+		</div>
+	{% endif %}
+	<br>
 	<h1>Book Payment</h1>
 
 	<h2>Book Details</h2>
@@ -13,9 +19,7 @@
 
 	<h2>User Details</h2>
 	<p>Name: {{userDetails.name}}</p>
-	<p>Email: {{userDetails.email}}</p>
-	<p>Address: {{userDetails.address}}</p>
-
+	<p>User ID: {{userDetails.email}}</p>
 	<h2>Payment Form</h2>
 	<form action="" method="POST">
 		<p>Are you sure to make payment for this book, after making the payment you will get pdf of this book.</p>
