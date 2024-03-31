@@ -23,31 +23,6 @@
       <div class="text-center">
         <h1>Your Current Books </h1>
       </div>
-      <div class="text-center mt-5 d-flex justify-content-center align-items-center me-md-auto">
-        <form class="w-25 me-2" role="search">
-            <div class="d-flex">
-              <input type="search" class="form-control" placeholder="Search Books..." aria-label="Search">
-              <div class="dropdown" style="margin-left: 15px;">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Dropdown button
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">Action</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-              </div>
-              <button type="submit" class="btn btn-secondary " style="margin-left: 15px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
-                </svg>
-              </button>
-            </div>
-        </form>
-      </div>
-
-
-
       <div>
         {% with messages = get_flashed_messages() %}
         {% if messages %}

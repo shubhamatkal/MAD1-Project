@@ -90,7 +90,7 @@ def user_register_post():
 
 
 
-@app.route('/user/dashboard')
+@app.route('/user/dashboard', methods=['GET', 'POST'])
 # @logged_user_required
 def user_dashboard():
     if 'user_id' not in session:
@@ -99,23 +99,57 @@ def user_dashboard():
     user_id =  session['user_id']
     user = User.query.filter_by(id=user_id).first()
     firstname_ = user.firstname
-    books = Book.query.all()
+    if request.method == 'POST':
+        search_keyword = request.form.get('search_keyword')
+        section = request.form.get('selected_section')
+        print(section, "this is section", search_keyword, "this is search keyword")
+        if section != "":
+            print("not all section selected")
+            section = Section.query.filter_by(section_title=section).first()
+            section_id = section.id
+            print(section_id, "this is section id")
+            books = Book.query.filter(Book.section_id == section_id).all()  
+        else:
+            print("all section selected")
+            books = Book.query.all()
+    else:
+        books = Book.query.all()
     book_list = []
+    section_list = []
+    print(search_keyword, "!!!!this is search keyword")
     for book in books:
         section = Section.query.get(book.section_id)
-        if section:
+        if search_keyword and search_keyword != None:
+            print("search keyword is not none or is available")
+            if search_keyword.lower() in book.book_title.lower():
+                book_dict = {
+                    'title': book.book_title,
+                    'section': section.section_title,
+                    'author': book.author,
+                    'id': book.id
+                    }
+                book_list.append(book_dict)
+        else:
+            print("search keyword is none or not available")
             book_dict = {
-            'title': book.book_title,
-            'section': section.section_title,
-            'author': book.author,
-            'id': book.id
+                'title': book.book_title,
+                'section': section.section_title,
+                'author': book.author,
+                'id': book.id
             }
             book_list.append(book_dict)
-        book_list.append(book_dict)
+    #for sections 
+    books_section = Book.query.all()
+    for book in books_section:
+        section = Section.query.get(book.section_id)
+        if section.section_title in section_list:
+            continue
+        section_list.append(section.section_title)
+    
     user_data = {"firstname": firstname_, "userid": user_id}
-
+    # print(book_list, "this is book list")
     # Pass the lists to the template
-    return render_template('userdash.html', user = user_data ,book_list = book_list)
+    return render_template('userdash.html', user = user_data ,book_list = book_list, sections = section_list)
 
 @app.route('/user/cancelbook')
 def cancel_book():
@@ -130,13 +164,6 @@ def cancel_book():
         db.session.commit()
         # print("deleted book")
     return redirect(url_for('user_books'))
-
-@app.route('/user/dashboard', methods=['POST'])
-def user_dashboard_post():
-    if 'user_id' not in session:
-        flash('Please login to continue')
-        return redirect(url_for('user_login'))
-    return "Not defined yet"
 
 @app.route('/user/books', methods=['POST', 'GET'])
 def user_books():
@@ -293,7 +320,7 @@ def librarian_register_post():
     return redirect(url_for('librarian_login'))
 
 
-@app.route('/library/home')
+@app.route('/library/home', methods=['GET', 'POST'])
 def librarian_dashboard():
     if 'lib_id' not in session:
         flash('Please login to continue')
@@ -301,7 +328,11 @@ def librarian_dashboard():
     lib_id =  session['lib_id']
     librarian = Librarian.query.filter_by(id=lib_id).first()
     libname = librarian.libraryname
-    sections = Section.query.all()
+    if request.method == 'POST':
+        search_keyword = request.form.get('search_keyword')
+        sections = Section.query.filter(Section.section_title.ilike(f'%{search_keyword}%')).all()
+    else:
+        sections = Section.query.all()
     section_list = []
     for section in sections:
         section_dict = {
@@ -313,24 +344,44 @@ def librarian_dashboard():
         section_list.append(section_dict)
     return render_template('libdash.html', libinfo={"Name": libname}, sections=section_list)    
 
-@app.route('/library/requests', methods=['GET'])
+@app.route('/library/requests', methods=['GET', 'POST'])
 def bookrequests():
     if 'lib_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('librarian_login'))
     book_requests = BookRequests.query.all()
     book_request_list = []
-    for request in book_requests:
+    sections_list = []
+    for request_ in book_requests:
         #book title needs to fetched from Book table
-        book_title = Book.query.get(request.book_id).book_title
-        request_dict = {
-            'id': request.id,
-            'book_title': book_title,
-            'user_id': request.user_id
-        }
-        book_request_list.append(request_dict)
+        if request.method == 'POST':
+            search_keyword = request.form.get('search_keyword')
+            selected_section = request.form.get('selected_section')
+            print(selected_section, "this is selected section")
+            book_title = Book.query.get(request_.book_id).book_title
+            if search_keyword.lower() in book_title.lower():
+                if selected_section in Section.query.get(Book.query.get(request_.book_id).section_id).section_title:
+                    request_dict = {
+                        'id': request_.id,
+                        'book_title': book_title,
+                        'user_id': request_.user_id
+                    }
+                    book_request_list.append(request_dict)
+                    section_name = Section.query.get(Book.query.get(request_.book_id).section_id).section_title
+                    sections_list.append(section_name)
+        else:
+            book_title = Book.query.get(request_.book_id).book_title
+            request_dict = {
+                'id': request_.id,
+                'book_title': book_title,
+                'user_id': request_.user_id
+            }
+            book_request_list.append(request_dict)
+            section_name = Section.query.get(Book.query.get(request_.book_id).section_id).section_title
+            sections_list.append(section_name)
+            
 
-    return render_template('bookrequests.html', book_requests=book_request_list)
+    return render_template('bookrequests.html', book_requests=book_request_list , sections = sections_list)
 
 
 @app.route('/library/addsection', methods=['GET', 'POST'])
