@@ -35,6 +35,10 @@ def logged_library_required(func):
 def home():
     return render_template('index.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/user/login')
 def user_login():
     return render_template('userlogin.html')
