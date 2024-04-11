@@ -210,7 +210,8 @@ def user_books():
                 'title': book.book_title,
                 'section': section_.section_title,
                 'author': book.author,
-                'id': book.id
+                'id': book.id,
+                'days remaining': user_book.days_requested - (date.today().day - user_book.date_borrowed.day)
             }
             current_books.append(book_dict)
 
@@ -232,13 +233,29 @@ def user_books():
     user_data = {"firstname": firstname_, "userid": user_id}
     return render_template('userbooks.html', user=user_data, requestedbooks=requested_books, currentbooks=current_books, completedbooks=completed_books )
 
-@app.route('/user/requestbook', methods=['GET'])
+@app.route('/user/requestbook', methods=['GET', 'POST'])
 def request_book():
     if 'user_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('user_login'))
-    
+    if request.method == 'POST':
+        book_id = request.form.get('book_id')
+        user_id = request.form.get('user_id')
+        days_requested = request.form.get('daysRequested')
+        print(book_id, user_id, days_requested, "this is book id, user id and days requested")
+        # # Add the request to BookRequests database
+        userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested', paid = False, days_requested=days_requested) 
+        new_request = BookRequests(book_id= book_id, user_id=user_id, date = date.today() ,days_requested=days_requested)
+        db.session.add(new_request)
+        db.session.add(userbooks_entry)
+        db.session.commit()
+        
+        flash('Book request submitted successfully')
+        return redirect(url_for('user_books'))
+
+
     user_id = session['user_id']
+    user_firstname = User.query.get(user_id).firstname
     book_id = request.args.get('book_id')
     book = Book.query.get(book_id)
     if book:
@@ -251,15 +268,18 @@ def request_book():
     if not book:
         flash('Book not found')
         return redirect(url_for('user_dashboard'))
-    # Add the request to BookRequests database
-    userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested', paid = False, days_requested=5)    
-    new_request = BookRequests(book_id= book_id, user_id=user_id, date = date.today() ,days_requested=5)
-    db.session.add(new_request)
-    db.session.add(userbooks_entry)
-    db.session.commit()
-    
-    flash('Book request submitted successfully')
-    return redirect(url_for('user_books'))
+    section_id_ = book.section_id
+    section = Section.query.get(section_id_)
+    book_details = {
+        'id' : book.id,
+        'title': book.book_title,
+        'author': book.author,
+        'section': section.section_title,
+        'user_id': user_id,
+        'user_name': user_firstname
+    }
+    return render_template('makerequest.html', book=book_details)
+
 
 @app.route('/user/return_book/<int:book_id>/<int:user_id>')
 def return_book(book_id, user_id):

@@ -47,6 +47,7 @@
                     <th>Title</th>
                     <th>Section</th>
                     <th>Author</th>
+                    <th>Days Remaining</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -58,6 +59,7 @@
                             <td>{{ book["title"] }}</td>
                             <td>{{ book["section"] }}</td>
                             <td>{{ book["author"] }}</td>
+                            <td>{{ book["days remaining"] }}</td>
                             <td>
                                 <a href="{{ url_for('return_book', book_id=book['id'] , user_id=user['userid']) }}">Return</a>
                                 <a href="{{ url_for('view_book', book_id=book['id']) }}">View</a>

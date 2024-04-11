@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Make Request</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<h1>Book Details</h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Book Title</th>
+					<th>Author</th>
+					<th>Section</th>
+					<th>User First Name</th>
+				
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{ book.title }}</td>
+					<td>{{ book.author }}</td>
+					<td>{{ book.section }}</td>
+					<td>{{ book.user_name }}</td>				
+				</tr>
+			</tbody>
+		</table>
+
+		<h2>Make Request</h2>
+		<form action="" method="post">
+			<div class="form-group">
+				<label for="daysRequested">Number of Days Requested:</label>
+				<input type="number" class="form-control" id="daysRequested" name="daysRequested" required>
+			</div>
+			<input type="hidden" name="user_id" value="{{ book.user_id }}">
+			<input type="hidden" name="book_id" value="{{ book.id }}">
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
