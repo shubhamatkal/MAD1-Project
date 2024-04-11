@@ -38,7 +38,11 @@ class UserBook(db.Model):
     status = db.Column(db.String(80), nullable=False)
     rating = db.Column(db.Integer, nullable=True)
     review = db.Column(db.String(500), nullable=True)
-    paid = db.Column(db.Boolean, nullable=False)    
+    paid = db.Column(db.Boolean, nullable=False)   
+    date_borrowed = db.Column(db.DateTime, nullable=True)  
+    date_returned = db.Column(db.DateTime, nullable=True)
+    days_requested = db.Column(db.Integer, nullable=False)
+     
 
 class BookRequests(db.Model):
     #no need of book name , and section id as we can get it from book id

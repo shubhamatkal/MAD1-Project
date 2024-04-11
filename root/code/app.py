@@ -171,11 +171,18 @@ def user_books():
     if 'user_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('user_login'))
+    user_books_pre = UserBook.query.filter_by(status='accepted').all()
+    for user_book in user_books_pre:
+        book = Book.query.get(user_book.book_id)
+        days_requested = user_book.days_requested
+        date_borrowed = user_book.date_borrowed
+        if date.today().day - date_borrowed.day > days_requested:
+            user_book.status = 'completed'
+            user_book.date_returned = date.today()
+            db.session.commit()
     user_id = session['user_id']
     user = User.query.filter_by(id=user_id).first()
     firstname_ = user.firstname
-
-    
     # Fetching requested books
     requested_books = []
     book_requests = UserBook.query.filter_by(user_id=user_id, status='requested').all()
@@ -245,7 +252,7 @@ def request_book():
         flash('Book not found')
         return redirect(url_for('user_dashboard'))
     # Add the request to BookRequests database
-    userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested', paid = False)
+    userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested', paid = False, days_requested=5)    
     new_request = BookRequests(book_id= book_id, user_id=user_id, date = date.today() ,days_requested=5)
     db.session.add(new_request)
     db.session.add(userbooks_entry)
@@ -259,6 +266,7 @@ def return_book(book_id, user_id):
     user_book = UserBook.query.filter_by(book_id=book_id, user_id=user_id).first()
     if user_book:
         user_book.status = 'completed'
+        user_book.date_returned = date.today()
         db.session.commit()
     return redirect(url_for('user_books'))
 
@@ -431,6 +439,69 @@ def bookrequests():
 
     return render_template('bookrequests.html', book_requests=book_request_list , sections = sections_list)
 
+@app.route('/library/currentbooks', methods=['GET', 'POST'])
+def current_books():
+    if 'lib_id' not in session: 
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    if request.method == 'POST':
+        #here you have to search and filter method and retrun the same as get method    
+        search_keyword = request.form.get('search_keyword')
+        print(search_keyword, "this is search keyword")
+        selected_section = request.form.get('selected_section')
+        user_books = UserBook.query.filter_by(status='accepted').all()  
+        book_list = []
+        sections_ = []
+        for user_book in user_books:
+            book = Book.query.get(user_book.book_id)
+            section = Section.query.get(book.section_id)
+            if search_keyword.lower() in book.book_title.lower():
+                if selected_section in section.section_title:
+                    validity = user_book.days_requested - (date.today().day - user_book.date_borrowed.day)  
+                    book_dict = {
+                        'title': book.book_title,
+                        'author': book.author,
+                        'section': section.section_title,
+                        'book_id': book.id,
+                        'user_id': user_book.user_id,
+                        'validity': validity
+                    }
+                    if section.section_title not in sections_:
+                        sections_.append(section.section_title) 
+                    book_list.append(book_dict)
+        return render_template('libcurrentbooks.html', books=book_list, sections = sections_)
+    if request.method == 'GET':
+        user_books_pre = UserBook.query.filter_by(status='accepted').all()
+        for user_book in user_books_pre:
+            book = Book.query.get(user_book.book_id)
+            days_requested = user_book.days_requested
+            date_borrowed = user_book.date_borrowed
+            if date.today().day - date_borrowed.day > days_requested:
+                user_book.status = 'completed'
+                user_book.date_returned = date.today()
+                db.session.commit()
+        user_books = UserBook.query.filter_by(status='accepted').all()  
+        book_list = []
+        sections_ = []
+        for user_book in user_books:
+            book = Book.query.get(user_book.book_id)
+            section = Section.query.get(book.section_id)
+            validity = user_book.days_requested - (date.today().day - user_book.date_borrowed.day)  
+
+            book_dict = {
+                'title': book.book_title,
+                'author': book.author,
+                'section': section.section_title,
+                'book_id': book.id,
+                'user_id': user_book.user_id,
+                'validity': validity
+            }
+            if section.section_title not in sections_:
+                sections_.append(section.section_title) 
+            book_list.append(book_dict)
+        print(book_list, "this is book list")
+        return render_template('libcurrentbooks.html', books=book_list, sections = sections_)    
+
 
 @app.route('/library/addsection', methods=['GET', 'POST'])
 def add_section():
@@ -528,6 +599,8 @@ def grantboooks():
     user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
     if user_book:
         user_book.status = 'accepted'
+        user_book.date_borrowed = date.today()
+        user_book.days_requested = book_request.days_requested
         db.session.delete(book_request)
         db.session.commit()
     else:
@@ -552,6 +625,26 @@ def rejectbooks():
 
     return redirect(url_for('bookrequests'))
 
+@app.route('/library/revoke', methods=['POST'])
+def revoke_access():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    print("revoking access 1st step")
+    user_id = request.form.get('user_id')
+    book_id = request.form.get('book_id')
+    print(user_id, book_id, "this is user id and book id for revoke access")
+    # user_book = 
+    print("book id" , book_id , "done")
+    print(type(book_id))
+    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
+    print(user_book, "this is user book")
+    if user_book:
+        user_book.status = 'completed'
+        print("inside user book existsrevoked access")
+        user_book.date_returned = date.today()
+        db.session.commit()
+    return redirect(url_for('current_books'))
 
 @app.route('/forgot_password')
 def forgot_password():
