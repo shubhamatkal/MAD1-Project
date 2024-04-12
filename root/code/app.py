@@ -649,6 +649,28 @@ def rejectbooks():
 
     return redirect(url_for('bookrequests'))
 
+@app.route('/library/delete_section')
+def delete_section():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    s_id = request.args.get('section_id')
+    section = Section.query.get(s_id)
+    if section:
+        # Delete books with the given section id
+        Book.query.filter_by(section_id=s_id).delete()
+        
+        # Delete requests with the given section id
+        BookRequests.query.filter_by(section_id=s_id).delete()
+        
+        # Delete user books with the given section id
+        UserBook.query.filter_by(section_id=s_id).delete()
+        
+        # Delete the section itself
+        db.session.delete(section)
+        db.session.commit()
+    return redirect(url_for('librarian_dashboard'))
+
 @app.route('/library/revoke', methods=['POST'])
 def revoke_access():
     if 'lib_id' not in session:
