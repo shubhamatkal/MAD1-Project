@@ -1,5 +1,9 @@
-*{
-    margin: 0px;
+.mainbody-nonlogin {
+    margin: 20px 100px;
+}
+
+body {
+    margin: 0 10px;
 }
 
 #form-body{
