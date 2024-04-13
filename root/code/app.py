@@ -251,6 +251,12 @@ def request_book():
         days_requested = request.form.get('daysRequested')
         print(book_id, user_id, days_requested, "this is book id, user id and days requested")
         # # Add the request to BookRequests database
+        if UserBook.query.filter_by(user_id=user_id, book_id=book_id, status='requested').first():
+            flash('Request already exists')
+            return redirect(url_for('user_books'))
+        if UserBook.query.filter_by(user_id=user_id, book_id=book_id, status='accepted').first():
+            flash('Book already borrowed')
+            return redirect(url_for('user_books'))
         userbooks_entry  = UserBook(user_id=user_id, book_id=book_id, status='requested', paid = False, days_requested=days_requested) 
         new_request = BookRequests(book_id= book_id, user_id=user_id, date = date.today() ,days_requested=days_requested)
         db.session.add(new_request)
@@ -294,10 +300,17 @@ def request_book():
 
 @app.route('/user/return_book/<int:book_id>/<int:user_id>')
 def return_book(book_id, user_id):
+    if UserBook.query.filter_by(book_id=book_id, user_id=user_id, status='completed').first():
+        UserBook.query.filter_by(book_id=book_id, user_id=user_id, status='accepted').delete()
+        ub = UserBook.query.filter_by(book_id=book_id, user_id=user_id, status='completed').first()
+        ub.times_read += 1
+        db.session.commit()
+        return redirect(url_for('user_books'))
     user_book = UserBook.query.filter_by(book_id=book_id, user_id=user_id).first()
     if user_book:
         user_book.status = 'completed'
         user_book.date_returned = date.today()
+        user_book.times_read += 1
         db.session.commit()
     return redirect(url_for('user_books'))
 
@@ -311,8 +324,9 @@ def download_book():
     user_id = request.args.get('user_id')
     book = Book.query.get(book_id)
     if request.method == 'POST':
-        user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
-        user_book.paid = True
+        user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).all()
+        for user_book in user_book:
+            user_book.paid = True
         db.session.commit()
         book_link = book.link
         return redirect(book_link)        
@@ -644,7 +658,7 @@ def grantboooks():
     if book_request:
         book_id = book_request.book_id
         user_id = book_request.user_id
-    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
+    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id, status= 'requested').first()
     if user_book:
         user_book.status = 'accepted'
         user_book.date_borrowed = date.today()
@@ -663,7 +677,7 @@ def rejectbooks():
     if book_request:
         book_id = book_request.book_id
         user_id = book_request.user_id
-    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
+    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id, status = 'requested').first()
     if user_book:
         db.session.delete(user_book)
         db.session.delete(book_request)
@@ -707,7 +721,13 @@ def revoke_access():
     # user_book = 
     print("book id" , book_id , "done")
     print(type(book_id))
-    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id).first()
+    if UserBook.query.filter_by(user_id=user_id, book_id=book_id, status='completed').first():
+        UserBook.query.filter_by(user_id=user_id, book_id=book_id, status='accepted').delete()
+        ub_ = user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id, status='completed').first()
+        ub_.times_read += 1
+        db.session.commit()
+        return redirect(url_for('current_books'))
+    user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id, status='accepted').first()
     print(user_book, "this is user book")
     if user_book:
         user_book.status = 'completed'

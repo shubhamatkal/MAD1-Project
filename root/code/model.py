@@ -42,6 +42,7 @@ class UserBook(db.Model):
     date_borrowed = db.Column(db.DateTime, nullable=True)  
     date_returned = db.Column(db.DateTime, nullable=True)
     days_requested = db.Column(db.Integer, nullable=False)
+    times_read = db.Column(db.Integer, nullable=False, default=0)
      
 
 class BookRequests(db.Model):
