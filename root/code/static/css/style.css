@@ -1,9 +1,17 @@
 .mainbody-nonlogin {
     margin: 20px 100px;
+    min-height: 550px;
 }
 
 body {
     margin: 0 10px;
+}
+
+.tableheaders {
+    text-align: left;
+    margin-left: 50px;
+    margin-top: 20px;
+
 }
 
 #form-body{
@@ -18,23 +26,3 @@ body {
 }
 
 /* style for list of books in user dashboard */
-.well {
-    background: none;
-    height: 320px;
-}
-
-.table-scroll tbody {
-    position: absolute;
-    overflow-y: scroll;
-    height: 250px;
-}
-
-.table-scroll tr {
-    width: 100%;
-    table-layout: fixed;
-    display: inline-table;
-}
-
-.table-scroll thead > tr > th {
-    border: none;
-}

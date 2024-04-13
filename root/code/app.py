@@ -101,9 +101,7 @@ def user_dashboard():
     if 'user_id' not in session:
         flash('Please login to continue')
         return redirect(url_for('user_login'))
-    user_id =  session['user_id']
-    user = User.query.filter_by(id=user_id).first()
-    firstname_ = user.firstname
+
     if request.method == 'POST':
         search_keyword = request.form.get('search_keyword')
         section = request.form.get('selected_section')
@@ -151,10 +149,11 @@ def user_dashboard():
             continue
         section_list.append(section.section_title)
     
-    user_data = {"firstname": firstname_, "userid": user_id}
-    # print(book_list, "this is book list")
-    # Pass the lists to the template
-    return render_template('userdash.html', user = user_data ,book_list = book_list, sections = section_list)
+    user_id =  session['user_id']
+    user = User.query.filter_by(id=user_id).first()
+    firstname_ = user.firstname
+    userinfo = {"Name": firstname_, 'userid': user_id}
+    return render_template('userdash.html', userinfo = userinfo ,book_list = book_list, sections = section_list)
 
 @app.route('/user/cancelbook')
 def cancel_book():
@@ -235,7 +234,11 @@ def user_books():
             completed_books.append(book_dict)
     print(completed_books, "this is completed books")
     user_data = {"firstname": firstname_, "userid": user_id}
-    return render_template('userbooks.html', user=user_data, requestedbooks=requested_books, currentbooks=current_books, completedbooks=completed_books )
+    user_id =  session['user_id']
+    user = User.query.filter_by(id=user_id).first()
+    firstname_ = user.firstname
+    userinfo = {"Name": firstname_, 'userid': user_id}
+    return render_template('userbooks.html', userinfo=userinfo, requestedbooks=requested_books, currentbooks=current_books, completedbooks=completed_books )
 
 @app.route('/user/requestbook', methods=['GET', 'POST'])
 def request_book():
@@ -282,7 +285,11 @@ def request_book():
         'user_id': user_id,
         'user_name': user_firstname
     }
-    return render_template('makerequest.html', book=book_details)
+    user_id =  session['user_id']
+    user = User.query.filter_by(id=user_id).first()
+    firstname_ = user.firstname
+    userinfo = {"Name": firstname_, 'userid': user_id}
+    return render_template('makerequest.html',userinfo = userinfo ,  book=book_details)
 
 
 @app.route('/user/return_book/<int:book_id>/<int:user_id>')
@@ -321,8 +328,11 @@ def download_book():
             'user_id': user_id,
             'name': User.query.get(user_id).firstname
         }
-        
-        return render_template('payment.html', bookDetails = bookDetails, userDetails = userDetails)
+        user_id =  session['user_id']
+        user = User.query.filter_by(id=user_id).first()
+        firstname_ = user.firstname
+        userinfo = {"Name": firstname_, 'userid': user_id}
+        return render_template('payment.html',userinfo = userinfo, bookDetails = bookDetails, userDetails = userDetails)
     else:
         book_link = book.link
         return redirect(book_link)    
@@ -460,8 +470,9 @@ def bookrequests():
             section_name = Section.query.get(Book.query.get(request_.book_id).section_id).section_title
             sections_list.append(section_name)
             
-
-    return render_template('bookrequests.html', book_requests=book_request_list , sections = sections_list)
+    libinfo_ = Librarian.query.get(session['lib_id'])
+    libinfo = {"Name": libinfo_.libraryname}
+    return render_template('bookrequests.html',libinfo = libinfo, book_requests=book_request_list , sections = sections_list)
 
 @app.route('/library/currentbooks', methods=['GET', 'POST'])
 def current_books():
@@ -493,7 +504,9 @@ def current_books():
                     if section.section_title not in sections_:
                         sections_.append(section.section_title) 
                     book_list.append(book_dict)
-        return render_template('libcurrentbooks.html', books=book_list, sections = sections_)
+        libinfo_ = Librarian.query.get(session['lib_id'])
+        libinfo = {"Name": libinfo_.libraryname}
+        return render_template('libcurrentbooks.html', libinfo= libinfo ,  books=book_list, sections = sections_)
     if request.method == 'GET':
         user_books_pre = UserBook.query.filter_by(status='accepted').all()
         for user_book in user_books_pre:
@@ -524,7 +537,9 @@ def current_books():
                 sections_.append(section.section_title) 
             book_list.append(book_dict)
         print(book_list, "this is book list")
-        return render_template('libcurrentbooks.html', books=book_list, sections = sections_)    
+        libinfo_ = Librarian.query.get(session['lib_id'])
+        libinfo = {"Name": libinfo_.libraryname}
+        return render_template('libcurrentbooks.html',libinfo = libinfo, books=book_list, sections = sections_)    
 
 
 @app.route('/library/addsection', methods=['GET', 'POST'])
@@ -534,7 +549,9 @@ def add_section():
         return redirect(url_for('librarian_login'))
     
     if request.method == 'GET':
-        return render_template('addsection.html')
+        libinfo_ = Librarian.query.get(session['lib_id'])
+        libinfo = {"Name": libinfo_.libraryname}
+        return render_template('addsection.html', libinfo = libinfo)
     if request.method == 'POST':
         section_title = request.form.get('sectionName')
         description = request.form.get('sectionDescription')
@@ -552,7 +569,9 @@ def add_book():
         return redirect(url_for('librarian_login'))
     if request.method == 'GET':
         section_id = request.args.get('section_id')
-        return render_template('addbook.html', )
+        libinfo_ = Librarian.query.get(session['lib_id'])
+        libinfo = {"Name": libinfo_.libraryname}
+        return render_template('addbook.html',libinfo = libinfo )
     if request.method == 'POST':
         section_id = request.args.get('section_id')
         book_title = request.form.get('bookTitle')
@@ -586,7 +605,9 @@ def show_books():
             'image': book.Image
         }
         book_list.append(book_dict)
-    return render_template('showbooks.html', section_id=section_id, books=book_list)
+    libinfo_ = Librarian.query.get(session['lib_id'])
+    libinfo = {"Name": libinfo_.libraryname}
+    return render_template('showbooks.html',libinfo= libinfo, section_id=section_id, books=book_list)
 
 @app.route('/library/view_book_details')
 def view_details():
@@ -607,7 +628,9 @@ def view_details():
             'user_id': book_request.user_id
         }
         print(book_request_info, "this is book request info")
-        return render_template('viewdetails.html', request_info=book_request_info)
+        libinfo_ = Librarian.query.get(session['lib_id'])
+        libinfo = {"Name": libinfo_.libraryname}
+        return render_template('viewdetails.html',libinfo = libinfo,  request_info=book_request_info)
     else:
         flash('Invalid request ID')
         return redirect(url_for('bookrequests'))
