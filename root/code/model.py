@@ -12,24 +12,24 @@ class Librarian(db.Model):
     id = db.Column(db.Integer, primary_key=True, default=1, unique=True, nullable=False)                                                                                                                                                     
     username = db.Column(db.String(80), unique=True, nullable=False)
     passhashed = db.Column(db.String(300), nullable=False)
-    libraryname = db.Column(db.String(200), nullable=True)
+    libraryname = db.Column(db.String(200), nullable=False)
 
 class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     section_title = db.Column(db.String(80), unique=True, nullable=False)
     date_created = db.Column(db.DateTime, nullable=False)
-    Image = db.Column(db.String(300), nullable=True)
-    description = db.Column(db.String(500), nullable=True)
+    Image = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.String(500), nullable=False)
     
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     section_id = db.Column(db.Integer, db.ForeignKey('section.id'), nullable=False)
     book_title = db.Column(db.String(80), unique=True, nullable=False)
     author = db.Column(db.String(80), nullable=False)
-    content = db.Column(db.String(500), nullable=True)
-    link = db.Column(db.String(300), nullable=True)
+    description = db.Column(db.String(500), nullable=True)
+    link = db.Column(db.String(300), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False)
-    Image = db.Column(db.String(300), nullable=True)
+    Image = db.Column(db.String(300), nullable=False)
 
 class UserBook(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,7 +45,6 @@ class UserBook(db.Model):
      
 
 class BookRequests(db.Model):
-    #no need of book name , and section id as we can get it from book id
     id = db.Column(db.Integer, primary_key=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

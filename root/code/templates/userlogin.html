@@ -27,12 +27,12 @@
             <h1>Login Form</h1>
             <form action="" method="post">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Shubham03" name="u_name" required>
+                    <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
+                    <input type="text" class="form-control" id="username" placeholder="Shubham03" name="u_name" pattern="[a-z0-9]{4,20}" title="Username should only contain lowercase alphabets and numbers, and length should be between 4 and 20 characters" required>
                 </div>
                 <div class="mb-3">
-                    <label for="pwd" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="pwd" name="pwd" required>
+                    <label for="pwd" class="form-label">Password<span style="color: red;">*</span></label>
+                    <input type="password" class="form-control" id="pwd" name="pwd" pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be between 5 and 50 characters long, and should contain at least one special character" required>
                 </div>
                 
                 <input type="submit" class="btn btn-primary" value="Login"> 

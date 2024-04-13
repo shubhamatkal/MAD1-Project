@@ -29,23 +29,23 @@
                 <form action="" method="post">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="username" placeholder="Shubham03" name="u_name" required>
+                        <input type="text" class="form-control" id="u_name" placeholder="Eg. shubhamatkal" name="u_name" pattern="[a-z0-9]{4,20}" title="Username should only contain lowercase alphabets and numbers, and length should be between 4 and 20 characters" required>
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">First Name<span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="username" placeholder="Shubham" name="first_name" required>
+                        <input type="text" class="form-control" id="first_name" placeholder="Eg. Shubham" name="first_name" pattern="[a-zA-Z0-9\s]{4,50}" title="First name should not contain special characters, and length should be between 4 and 50 characters" required>
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="username" placeholder="Atkal" name="last_name" optional>
+                        <input type="text" class="form-control" id="last_name" placeholder="Eg. Atkal" name="last_name" pattern="[a-zA-Z0-9\s]{4,50}" title="First name should not contain special characters, and length should be between 4 and 50 characters" optional>
                     </div>
                     <div class="mb-3">
                         <label for="pwd" class="form-label">Password<span style="color: red;">*</span></label>
-                        <input type="password" class="form-control" id="pwd" name="password" required>
+                        <input type="password" class="form-control" id="pwd" name="password" pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be between 5 and 50 characters long, and should contain at least one special character" required>
                     </div>
                     <div class="mb-3">
                         <label for="pwd" class="form-label">Confirm Password<span style="color: red;">*</span></label>
-                        <input type="password" class="form-control" id="pwd" name="c_password" required>
+                        <input type="password" class="form-control" id="pwd" name="c_password" pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be between 5 and 50 characters long, and should contain at least one special character" required>
                     </div>
                     
                     <input type="submit" class="btn btn-primary" value="Register"> 

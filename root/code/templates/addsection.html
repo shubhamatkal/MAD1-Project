@@ -10,13 +10,13 @@
   {% include 'header-lib.html' %}
   <div class="mainbody-nonlogin">
     <form action="" method="POST">
-    <label for="sectionName">Section Name:</label>
-    <input type="text" id="sectionName" name="sectionName" required>
+    <label for="sectionName">Section Name<span style="color: red;">*</span>:</label>
+    <input type="text" id="sectionName" name="sectionName" required maxlength="50">
     
-    <label for="sectionImage">Section Image:</label>
-    <input type="url" id="sectionImage" name="sectionImage">
+    <label for="sectionImage">Section Image<span style="color: red;">*</span>:</label>
+    <input type="url" id="sectionImage" name="sectionImage" placeholder="url link for section image">
     
-    <label for="sectionDescription">Section Description:</label>
+    <label for="sectionDescription">Section Description<span style="color: red;">*</span>:</label>
     <textarea id="sectionDescription" name="sectionDescription" required></textarea>
     
     <input type="submit" value="Add Section">

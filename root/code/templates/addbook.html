@@ -10,20 +10,20 @@
   {% include 'header-lib.html' %}
   <div class="mainbody-nonlogin">
     <form action="" method="POST">
-        <label for="bookTitle">Book Name:</label>
-        <input type="text" id="bookTitle" name="bookTitle" required>
+        <label for="bookTitle">Book Name<span style="color: red;">*</span>:</label>
+        <input type="text" id="bookTitle" name="bookTitle" required maxlength="100" placeholder="Book title">
         <input type="hidden" name="section_id" value="{{ section_id }}">
-        <label for="author">Author </label>
-        <input type="text" id="author" name="author" required>
+        <label for="author">Author<span style="color: red;">*</span> </label>
+        <input type="text" id="author" name="author" maxlength="100" required>
         
-        <label for="bookImage">Book Image:</label>
-        <input type="url" id="bookImage" name="bookImage">
+        <label for="bookImage">Book Image<span style="color: red;">*</span>:</label>
+        <input type="url" id="bookImage" name="bookImage" required>
 
         <label for="content">Book Link:</label>
-        <textarea id="content" name="link" required></textarea>
+        <input type="url" id="link" name="link" required>
         
-        <label for="content">Book Content:</label>
-        <textarea id="content" name="content" required></textarea>
+        <label for="content">Book Description:</label>
+        <textarea id="Description" name="Description"></textarea>
         
         <input type="submit" value="Add Section">
         <br>

@@ -389,6 +389,7 @@ def librarian_register_post():
     confirm_password = request.form.get('c_pwd')
     #username, passhashed, firstname, lastname
     
+
     if password != confirm_password:
         flash('Passwords do not match')
         return redirect(url_for('librarian_register'))
@@ -576,10 +577,10 @@ def add_book():
         section_id = request.args.get('section_id')
         book_title = request.form.get('bookTitle')
         author = request.form.get('author')
-        content = request.form.get('content')
+        description = request.form.get('Description') #optional
         link = request.form.get('link')
         book_image = request.form.get('bookImage')
-        new_book = Book(section_id=section_id, book_title=book_title, author=author, content=content, date_created=date.today(), Image=book_image, link = link)
+        new_book = Book(section_id=section_id, book_title=book_title, author=author, description=description, date_created=date.today(), Image=book_image, link = link)
         db.session.add(new_book)
         db.session.commit()
         return redirect(url_for('librarian_dashboard'))
@@ -601,7 +602,7 @@ def show_books():
         book_dict = {
             'title': book.book_title,
             'author': book.author,
-            'content': book.content,
+            'content': book.description,
             'image': book.Image
         }
         book_list.append(book_dict)
