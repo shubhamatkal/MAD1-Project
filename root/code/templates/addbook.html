@@ -9,27 +9,36 @@
 <body>
   {% include 'header-lib.html' %}
   <div class="mainbody-nonlogin">
+    <div id="form-body">
+      <h2>Add Book</h2>
     <form action="" method="POST">
-        <label for="bookTitle">Book Name<span style="color: red;">*</span>:</label>
-        <input type="text" id="bookTitle" name="bookTitle" required maxlength="100" placeholder="Book title">
-        <input type="hidden" name="section_id" value="{{ section_id }}">
-        <label for="author">Author<span style="color: red;">*</span> </label>
-        <input type="text" id="author" name="author" maxlength="100" required>
-        
-        <label for="bookImage">Book Image<span style="color: red;">*</span>:</label>
-        <input type="url" id="bookImage" name="bookImage" required>
-
-        <label for="content">Book Link:</label>
-        <input type="url" id="link" name="link" required>
-        
-        <label for="content">Book Description:</label>
-        <textarea id="Description" name="Description"></textarea>
-        
-        <input type="submit" value="Add Section">
-        <br>
-    </form>
-    <a href="{{url_for('librarian_dashboard')}}">Back to Dashboard</a>
+        <div class="mb-3">
+          <label for="bookTitle" class="form-label" >Book Name<span style="color: red;">*</span>:</label>
+          <input class="form-control" type="text" id="bookTitle" name="bookTitle" required maxlength="100" placeholder="Book title">
+          <input type="hidden" name="section_id" value="{{ section_id }}">
+        </div>
+        <div class="mb-3">
+          <label for="author" class="form-label">Author<span style="color: red;">*</span> </label>
+          <input class="form-control" type="text" id="author" name="author" maxlength="100" required>
+        </div>
+        <div class="mb-3">  
+          <label for="bookImage" class="form-label">Book Image<span style="color: red;">*</span>:</label>
+          <input class="form-control" type="url" id="bookImage" name="bookImage" required>
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">Book Link:</label>
+          <input class="form-control" type="url" id="link" name="link" required>
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">Book Description:</label>
+          <textarea class="form-control" id="Description" name="Description"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Book</button>
+      </form>
+    <br>
+    <a class="btn btn-secondary" href="{{url_for('librarian_dashboard')}}">Back to Dashboard</a>
   </div>
+</div>
   {% include 'footer.html' %}
 </body>
 </html>

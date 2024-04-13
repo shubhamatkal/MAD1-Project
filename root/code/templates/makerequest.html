@@ -29,18 +29,20 @@
 				</tr>
 			</tbody>
 		</table>
-
+		<div id="form-body">
 		<h2>Make Request</h2>
-		<form action="" method="post">
-			<div class="form-group">
-				<label for="daysRequested">Number of Days Requested:</label>
+		<form action="" method="post">																													
+			<div class="mb-3">
+				<label class="form-label" for="daysRequested">Number of Days Requested:</label>
 				<input type="number" class="form-control" id="daysRequested" name="daysRequested" required min="1" max="15">
-			<input type="hidden" name="user_id" value="{{ book.user_id }}">
-			<input type="hidden" name="book_id" value="{{ book.id }}">
+				<input type="hidden" name="user_id" value="{{ book.user_id }}">
+				<input type="hidden" name="book_id" value="{{ book.id }}">
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
-		<a href="{{ url_for('user_dashboard') }}">Back to User Dashboard</a>
+		<a class="btn btn-secondary"  href="{{ url_for('user_dashboard') }}">Back</a>
 	</div>
-
-	{% include 'footer.html' %}</body>
+</div>
+</div>
+	{% include 'footer.html' %}
+</body>
 </html>
