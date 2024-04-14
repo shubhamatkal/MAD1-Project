@@ -21,7 +21,12 @@
       {% endwith %}
     </div>
     <br>
-    <div class="text-center mt-5 d-flex justify-content-center align-items-center me-md-auto">
+    <div >
+      <div style="text-align: left; margin-left: 50px;">
+        <h3>Sections</h3>
+      </div>
+    </div>
+    <div class="text-center d-flex justify-content-center align-items-center me-md-auto">
       <form class="w-25 me-2" role="search" action="" method="post">
           <div class="d-flex">
             <input type="search" class="form-control" placeholder="Search Sections..." aria-label="Search" name="search_keyword">
@@ -33,23 +38,27 @@
           </div>
       </form>
     </div>
-    <div style="margin: 50px;">
-      <div style="text-align: left; margin-left: 50px;">
-        <h3>Sections</h3>
-      </div>
-    </div>
+    <br>
     <div>
       {% if sections %}
-        {% for section in sections %}
-          <div class="section-box">
-            <h4>{{ section.name }}</h4>
-            <p>Date Created: {{ section.date_created }}</p>
-            <p>Description: {{ section.description }}</p>
-            <a href="{{url_for('show_books', section_id=section.id)}}" class="btn btn-primary">Show all Books</a>
-            <a href="{{url_for('add_book', section_id=section.id)}}" class="btn btn-primary">Add Book</a>
-            <a href="{{url_for('delete_section', section_id=section.id)}}" class="btn btn-primary">Delete Section</a>
-          </div>
-        {% endfor %}
+        <div class="row">
+          {% for section in sections %}
+            <div class="col-md-4">  
+              <div class="section-box" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ section.image }}');background-size: cover; background-position: center;">
+                  <h4 style="text-align: center;">{{ section.name }}</h4>
+                  <p >Description: {{ section.description }}</p>
+                <div style="text-align: center;">
+                <a href="{{url_for('show_books', section_id=section.id)}}" class="btn btn-primary btn-sm">Show all Books</a>
+                <a href="{{url_for('add_book', section_id=section.id)}}" class="btn btn-primary btn-sm">Add Book</a>
+                <a href="{{url_for('delete_section', section_id=section.id)}}" class="btn btn-primary btn-sm">Delete Section</a>
+              </div>
+              </div>
+            </div>
+            {% if loop.index % 3 == 0 %}
+              </div><div class="row">
+            {% endif %}
+          {% endfor %}
+        </div>
       {% else %}
         <div class="text-center">
           <p>No sections found, kindly create by using the below create button.</p>

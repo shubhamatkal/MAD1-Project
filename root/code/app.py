@@ -364,7 +364,62 @@ def view_book():
     book_link = book.link
     return render_template('viewbook.html', pdfLink=book_link)    
     
-
+@app.route('/user/stats')
+def user_stats():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+    firstname_ = user.firstname
+    user_books = UserBook.query.filter(UserBook.user_id == user_id, UserBook.status.in_(['completed', 'accepted'])).all()
+    section_read_bookcount = {}
+    for book_ in user_books:
+        section_id = Book.query.get(book_.book_id).section_id
+        section_name = Section.query.get(section_id).section_title
+        if section_name in section_read_bookcount:
+            # section_read_bookcount
+            section_read_bookcount[section_name] += 1
+        else:
+            section_read_bookcount[section_name] = 1
+    user_details = {"Name": firstname_, 'userid': user_id}
+    total_books_read = len(user_books)
+    total_books = len(Book.query.all())
+    total_books_purchased = len(UserBook.query.filter_by(user_id=user_id, paid=True, status = 'completed').all()) + len(UserBook.query.filter_by(user_id=user_id, paid=True, status = 'accepted').all())
+    percentage_of_books_read = (total_books_read/total_books) * 100
+    user_stats = {
+        'Books Available': total_books,
+        'Books Read': total_books_read,
+        'Books Purchased': total_books_purchased,
+    }
+    avg_days_requested = 0
+    n= 0
+    for book in user_books:
+        avg_days_requested += book.days_requested
+        n += 1
+    if n != 0:
+        avg_days = avg_days_requested/n
+    else:
+        avg_days = 0
+    avg_days_ = 0
+    if avg_days >= 10:
+        avg_days_ = 10
+    if avg_days < 10:
+        avg_days_ = avg_days
+    read_index = (percentage_of_books_read/1000) * avg_days_
+    user_percentage = {
+        'Total': total_books,
+        'Books Read': total_books_read,
+        'Percentage of Books Read': percentage_of_books_read,
+        'Read Index': read_index
+    }
+    Most_read_books = UserBook.query.filter_by(user_id=user_id, status='completed').order_by(UserBook.times_read.desc()).limit(5)
+    most_read_books = {}
+    for book in Most_read_books:
+        book_ = Book.query.get(book.book_id)
+        section_ = Section.query.get(book_.section_id)
+        most_read_books[book_.book_title] = book.times_read
+    return render_template('stats-user.html',user_percentage= user_percentage, most_read_books = most_read_books ,userinfo=user_details, section_read_bookcount=section_read_bookcount, userstats = user_stats)
 
 #library routes
 
@@ -444,7 +499,8 @@ def librarian_dashboard():
             'name': section.section_title,
             'datecreated': section.date_created,
             'description': section.description,
-            'id': section.id
+            'id': section.id,
+            'image': section.Image
         }
         section_list.append(section_dict)
     return render_template('libdash.html', libinfo={"Name": libname}, sections=section_list)    
@@ -610,6 +666,7 @@ def show_books():
         books = Book.query.filter(Book.section_id == section_id, Book.book_title.ilike(f'%{search_keyword}%')).all()
     else:
         section_id = request.args.get('section_id')
+        section_name = Section.query.get(section_id).section_title
         books = Book.query.filter(Book.section_id == section_id).all()
     book_list = []
     for book in books:
@@ -622,7 +679,7 @@ def show_books():
         book_list.append(book_dict)
     libinfo_ = Librarian.query.get(session['lib_id'])
     libinfo = {"Name": libinfo_.libraryname}
-    return render_template('showbooks.html',libinfo= libinfo, section_id=section_id, books=book_list)
+    return render_template('showbooks.html',libinfo= libinfo, section_id=section_id, books=book_list, section_name = section_name)
 
 @app.route('/library/view_book_details')
 def view_details():

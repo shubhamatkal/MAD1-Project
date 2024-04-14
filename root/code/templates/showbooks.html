@@ -24,23 +24,26 @@
       </div>
 
 
-    <h1>Books in Section {{ section_id }}</h1>
+    <h1>Books in {{ section_name }} Section</h1>
     {% if books %}
-        <ul>
+    <div class="row">
         {% for book in books %}
-            <li>
-                <h2>{{ book.title }}</h2>
-                <p>Author: {{ book.author }}</p>
-                <p>Content: {{ book.content }}</p>
-                <img src="{{ book.image }}" alt="{{ book.title }}">
-            </li>
+        <div class="col-md-4">  
+            <div class="section-box" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ book.image }}');background-size: cover; background-position: center; min-height: 350px; max-width: 300px;">
+                <h4 style="text-align: center;">{{ book.title }}</h4>
+                <p >Author: {{ book.author }}</p>
+            </div>
+          </div>
+          {% if loop.index % 3 == 0 %}
+            </div><div class="row">
+          {% endif %}
         {% endfor %}
-        </ul>
+      </div>
     {% else %}
         <p>No books found in this section.</p>
     {% endif %}
-
-    <a href="{{ url_for('librarian_dashboard') }}">Back to Librarian Dashboard</a>
+    <br>
+    <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">Back</a>
     </div>
     {% include 'footer.html' %}
 

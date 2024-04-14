@@ -14,6 +14,7 @@ body {
 
 }
 
+
 #form-body{
     border: 1px solid grey;
     width: 370px;
@@ -25,4 +26,12 @@ body {
     background-color: salmon;
 }
 
+
+.section-box {
+    border: 4px solid #000; /* Thick black border */
+    border-radius: 10px; /* Rounded corners */
+    /* background-image: url('your-image-url.jpg'); Replace 'your-image-url.jpg' with your actual image URL */
+    background-size: cover; /* Cover the entire box with the background image */
+    padding: 20px; /* Add padding inside the box */
+}
 /* style for list of books in user dashboard */

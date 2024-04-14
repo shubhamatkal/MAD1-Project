@@ -48,21 +48,21 @@
       <div class = "tableheaders">
           <h3>List of Available books</h3>
       </div>
-      <div class="col-xs-8 col-xs-offset-2 well"></div>
+      <div class="col-xs-8 col-xs-offset-2 well table"></div>
           <table class="table table-scroll table-striped">
-              <thead>
-                  <tr>
-                      <th>#</th>
-                      <th>Title</th>
-                      <th>Section</th>
-                      <th>Author</th>
-                      <th>Action</th>
-                  </tr>
-              </thead>
-              <tbody>
+              <thead >
+                <tr ></tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Section</th>
+                  <th>Author</th>
+                  <th>Action</th>
+                </tr>
+              </thead> 
+              <tbody >
                   {% if book_list %}
                       {% for book in book_list %}
-                          <tr>
+                          <tr >
                               <td>{{ loop.index }}</td>
                               <td>{{ book["title"] }}</td>
                               <td>{{ book["section"] }}</td>
