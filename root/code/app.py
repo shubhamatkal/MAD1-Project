@@ -793,6 +793,61 @@ def revoke_access():
         db.session.commit()
     return redirect(url_for('current_books'))
 
+@app.route('/library/stats')
+def library_stats():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    lib_id = session['lib_id']
+    librarian = Librarian.query.get(lib_id)
+    libname = librarian.libraryname
+    sections = Section.query.all()
+    section_books = {}
+    for section in sections:
+        section_books[section.section_title] = len(Book.query.filter_by(section_id=section.id).all())
+    total_books = len(Book.query.all())
+    total_users = len(User.query.all())
+    total_books_read = len(UserBook.query.filter_by(status='completed').all())
+    total_books_purchased = len(UserBook.query.filter_by(paid = True).all())
+    total_books_requested = len(BookRequests.query.all())
+    total_books_granted = len(UserBook.query.filter_by(status='accepted').all())
+    total_books_rejected = len(BookRequests.query.all()) - total_books_granted
+    total_books_returned = len(UserBook.query.filter_by(status='completed').all())
+    total_books_current = len(UserBook.query.filter_by(status='accepted').all())
+    lib_info = {"Name": libname}
+    #section wise books published
+    sections = {}
+    for section in Section.query.all():
+        sections[section.section_title] = len(Book.query.filter_by(section_id=section.id).all())
+    
+    #bar chart for total books , books current in read , book requests , books purchased 
+    books_stats = {}
+    books_stats['Total Books'] = total_books
+    books_stats['Books Purchased'] = total_books_purchased
+    books_stats['Books Read'] = total_books_read
+    books_stats['Books Requested'] = total_books_requested
+    books_stats['Books Granted'] = total_books_granted
+
+    # list all total registered users , active users
+    total_users = len(User.query.all())
+    users_list = User.query.all()
+    users_list_ = {}
+    for user in users_list:
+        users_list_[user.username] = len(UserBook.query.filter_by(user_id=user.id, status='completed').all()) + len(UserBook.query.filter_by(user_id=user.id, status='accepted').all())
+        # users_list_[user.username] = 
+    sorted_users_list = {k: v for k, v in sorted(users_list_.items(), key=lambda item: item[1], reverse=True)}
+
+    active_users = 0
+    for user in users_list:
+        if UserBook.query.filter_by(user_id=user.id, status='completed').first():
+            active_users += 1
+    #most liked section , most read book , most read author
+    most_liked_section = max(section_books, key=section_books.get)
+    most_read_book = max(books_stats, key=books_stats.get)
+    
+    return render_template('stats-lib.html', libinfo = lib_info,sections= sections, books_stats = books_stats,users_list = sorted_users_list, active_users = active_users, most_liked_section = most_liked_section, most_read_book = most_read_book)
+
+
 @app.route('/forgot_password')
 def forgot_password():
     return render_template('forgot_password.html')
