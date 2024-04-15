@@ -8,7 +8,7 @@
 </head>
 <body>
     {% include 'header-nonlogin.html' %}
-    <div class="mainbody-nonlogin">
+    <div class="mainbody">
         <div id="form-body">
             <h1>Register Your Library</h1>
             <div>
@@ -26,15 +26,21 @@
             <form action="" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
-                    <input type="text" class="form-control" id="username" placeholder="Eg. ganeshlibrary123" name="u_name" pattern="[a-z0-9]{4,20}" title="Username should only contain lowercase alphabets and numbers, and length should be between 4 and 20 characters" required>
+                    <input type="text" class="form-control" id="username" placeholder="Eg. ganeshlibrary123" 
+                    name="u_name" pattern="[a-z0-9]{4,20}" title="Username should only contain lowercase alphabets
+                     and numbers, and length should be between 4 and 20 characters" required>
                 </div>
                 <div class="mb-3">
                     <label for="libraryname" class="form-label">Library Name<span style="color: red;">*</span></label>
-                    <input type="text" class="form-control" id="libraryname" placeholder="Eg. Ganesh Library" name="libraryname" pattern="[a-zA-Z0-9\s]{4,50}" title="Library name should not contain special characters, and length should be between 4 and 50 characters" required>
+                    <input type="text" class="form-control" id="libraryname" placeholder="Eg. Ganesh Library"
+                     name="libraryname" pattern="[a-zA-Z0-9\s]{4,50}" title="Library name should not contain 
+                     special characters, and length should be between 4 and 50 characters" required>
                 </div>
                 <div class="mb-3">
                     <label for="pwd" class="form-label">Password<span style="color: red;">*</span></label>
-                    <input type="password" class="form-control" id="pwd" name="pwd" pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be between 5 and 50 characters long, and should contain at least one special character" required>
+                    <input type="password" class="form-control" id="pwd" name="pwd" 
+                    pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be between 
+                    5 and 50 characters long, and should contain at least one special character" required>
                 </div>
                 <div class="mb-3">
                     <label for="pwd" class="form-label">Confirm Password<span style="color: red;">*</span></label>

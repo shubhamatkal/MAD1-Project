@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Make Request</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<title>Make Request</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+		rel="stylesheet" 
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+		crossorigin="anonymous">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  {% include 'header-user.html' %}
-  <div class="mainbody-nonlogin">
+	{% include 'header-user.html' %}
+	<div class="mainbody"></div>
 		<h1>Book Details</h1>
 		<table class="table">
 			<thead>
@@ -17,7 +19,6 @@
 					<th>Author</th>
 					<th>Section</th>
 					<th>User First Name</th>
-				
 				</tr>
 			</thead>
 			<tbody>
@@ -25,25 +26,26 @@
 					<td>{{ book.title }}</td>
 					<td>{{ book.author }}</td>
 					<td>{{ book.section }}</td>
-					<td>{{ book.user_name }}</td>				
+					<td>{{ book.user_name }}</td>
 				</tr>
 			</tbody>
 		</table>
 		<div id="form-body">
-		<h2>Make Request</h2>
-		<form action="" method="post">																													
-			<div class="mb-3">
-				<label class="form-label" for="daysRequested">Number of Days Requested:</label>
-				<input type="number" class="form-control" id="daysRequested" name="daysRequested" required min="1" max="15">
-				<input type="hidden" name="user_id" value="{{ book.user_id }}">
-				<input type="hidden" name="book_id" value="{{ book.id }}">
-			<button type="submit" class="btn btn-primary" style="margin-top: 10px;">Submit</button>
-		</form>
-		
-		<a  class="btn btn-secondary"  href="{{ url_for('user_dashboard') }}" style="margin-top: 10px; margin-left: 10px;">Back</a>
+			<h2>Make Request</h2>
+			<form action="" method="post">
+				<div class="mb-3">
+					<label class="form-label" for="daysRequested">Number of Days Requested:</label>
+					<input type="number" class="form-control" id="daysRequested" 
+						name="daysRequested" required min="1" max="15">
+					<input type="hidden" name="user_id" value="{{ book.user_id }}">
+					<input type="hidden" name="book_id" value="{{ book.id }}">
+					<button type="submit" class="btn btn-primary" style="margin-top: 10px;">Submit</button>
+				</div>
+			</form>
+			<a class="btn btn-secondary" href="{{ url_for('user_dashboard') }}" 
+				style="margin-top: 10px; margin-left: 10px;">Back</a>
+		</div>
 	</div>
-</div>
-</div>
 	{% include 'footer.html' %}
 </body>
 </html>

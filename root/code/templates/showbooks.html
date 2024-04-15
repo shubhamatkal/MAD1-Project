@@ -8,28 +8,32 @@
 </head>
 <body>
   {% include 'header-lib.html' %}
-  <div class="mainbody-nonlogin">
+  <div class="mainbody">
     <div class="text-center mt-5 d-flex justify-content-center align-items-center me-md-auto">
         <form class="w-25 me-2" role="search" action="{{ url_for('show_books') }}" method="post">
             <div class="d-flex">
-                <input type="search" class="form-control" placeholder="Search Books..." aria-label="Search" name="search_keyword">
+                <input type="search" class="form-control" placeholder="Search Books..." 
+                aria-label="Search" name="search_keyword">
                 <input type="hidden" name="section_id" value="{{ section_id }}">
                 <button type="submit" class="btn btn-secondary" style="margin-left: 15px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                    class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 
+                        3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 
+                        0 5.5 5.5 0 0 1 11 0"></path>
                     </svg>
                 </button>
             </div>
         </form>
       </div>
-
-
     <h1>Books in {{ section_name }} Section</h1>
     {% if books %}
     <div class="row">
         {% for book in books %}
         <div class="col-md-4">  
-            <div class="section-box" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ book.image }}');background-size: cover; background-position: center; min-height: 350px; max-width: 300px;">
+            <div class="section-box" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5),
+             rgba(255, 255, 255, 0.5)), url('{{ book.image }}');background-size: cover;
+              background-position: center; min-height: 350px; max-width: 300px;">
                 <h4 style="text-align: center;">{{ book.title }}</h4>
                 <p >Author: {{ book.author }}</p>
             </div>
@@ -46,6 +50,5 @@
     <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">Back</a>
     </div>
     {% include 'footer.html' %}
-
 </body>
 </html>

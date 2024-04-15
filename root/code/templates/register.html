@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
     <title>User Register form</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+     rel="stylesheet" 
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
+    crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     {% include 'header-nonlogin.html' %}
-    <div class="mainbody-nonlogin">
+    <div class="mainbody">
         <div id="canvas">
-            <h2 style="text-align: center; font-size:xx-large;" >Welcome, User!</h2> <!-- Greeting heading for users -->
+            <h2 style="text-align: center; font-size:xx-large;">Welcome, User!</h2> 
             <h3 style="text-align: center; font-size: large;">Let's Start Your Reading Journey</h3>
             <div>
                 <br>
@@ -28,34 +30,48 @@
                 <h1>Register Form</h1>
                 <form action="" method="post">
                     <div class="mb-3">
-                        <label for="username" class="form-label">Username<span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="u_name" placeholder="Eg. shubhamatkal" name="u_name" pattern="[a-z0-9]{4,20}" title="Username should only contain lowercase alphabets and numbers, and length should be between 4 and 20 characters" required>
+                        <label for="username" class="form-label">Username<span style="color: red;">
+                            *</span></label>
+                        <input type="text" class="form-control" id="u_name" placeholder=
+                            "Eg. shubhamatkal" name="u_name" pattern="[a-z0-9]{4,20}" title="Username 
+                            should only contain lowercase alphabets and numbers, and length should be 
+                            between 4 and 20 characters" required>
                     </div>
                     <div class="mb-3">
-                        <label for="username" class="form-label">First Name<span style="color: red;">*</span></label>
-                        <input type="text" class="form-control" id="first_name" placeholder="Eg. Shubham" name="first_name" pattern="[a-zA-Z0-9\s]{4,50}" title="First name should not contain special characters, and length should be between 4 and 50 characters" required>
+                        <label for="username" class="form-label">First Name<span style="color: red;"
+                            >*</span></label>
+                        <input type="text" class="form-control" id="first_name" placeholder="Eg. Shubham" 
+                            name="first_name" pattern="[a-zA-Z0-9\s]{4,50}" title="First name should not contain 
+                            special characters, and length should be between 4 and 50 characters" required>
                     </div>
                     <div class="mb-3">
                         <label for="username" class="form-label">Last Name</label>
-                        <input type="text" class="form-control" id="last_name" placeholder="Eg. Atkal" name="last_name" pattern="[a-zA-Z0-9\s]{4,50}" title="First name should not contain special characters, and length should be between 4 and 50 characters" optional>
+                        <input type="text" class="form-control" id="last_name" placeholder="Eg. Atkal" 
+                            name="last_name" pattern="[a-zA-Z0-9\s]{4,50}" title="First name should not 
+                            contain special characters, and length should be between 4 and 50 characters" optional>
                     </div>
                     <div class="mb-3">
                         <label for="pwd" class="form-label">Password<span style="color: red;">*</span></label>
-                        <input type="password" class="form-control" id="pwd" name="password" pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be between 5 and 50 characters long, and should contain at least one special character" required>
+                        <input type="password" class="form-control" id="pwd" name="password" 
+                            pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be between
+                            5 and 50 characters long, and should contain at least one special character" required>
                     </div>
                     <div class="mb-3">
-                        <label for="pwd" class="form-label">Confirm Password<span style="color: red;">*</span></label>
-                        <input type="password" class="form-control" id="pwd" name="c_password" pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be between 5 and 50 characters long, and should contain at least one special character" required>
+                        <label for="pwd" class="form-label">Confirm Password<span style="color: red;"
+                            >*</span></label>
+                        <input type="password" class="form-control" id="pwd" name="c_password" 
+                            pattern="^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{5,50}$" title="Password should be 
+                            between 5 and 50 characters long, and should contain at least one special character" 
+                            required>
                     </div>
-                    
                     <input type="submit" class="btn btn-primary" value="Register"> 
                 </form>
                 <div style="text-align: center;">
                     Are you an old user? <a href="{{url_for('user_login')}}">Login.</a>
                 </div>
             </div>
-            </div>
         </div>
-        {% include 'footer.html' %}
-    </body>
+    </div>
+    {% include 'footer.html' %}
+</body>
 </html>

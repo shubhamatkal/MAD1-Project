@@ -1,5 +1,4 @@
-python-dotenv==0.17.1
 Flask
 Werkzeug
 SQLAlchemy	
-flask_sqlalchemy
+Flask-SQLAlchemy

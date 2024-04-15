@@ -8,14 +8,14 @@
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   </head>
   <body>
-	{% include 'header-nonlogin.html' %}
-    <div class="mainbody-nonlogin"> <!-- this is for main body for non login -->
+    {% include 'header-nonlogin.html' %}
+    <div class="mainbody"> 
       <h1>About</h1>
       <br>
       <p>This is Library management website which provides e books for students at their conveniance</p>
-	<p style="color: blue;"><a href="mailto:23f1002838@ds.study.iitm.ac.in" class="nav-link">Contact</a></p>
-	  <p>Thank you, happy reading !</p>
+      <p style="color: blue;"><a href="mailto:23f1002838@ds.study.iitm.ac.in" class="nav-link">Contact</a></p>
+      <p>Thank you, happy reading !</p>
     </div>
-	{% include 'footer.html' %}
-  </body>
+    {% include 'footer.html' %}
+  </body>  
 </html>
