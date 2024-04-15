@@ -30,24 +30,29 @@
     {% if books %}
     <div class="row">
         {% for book in books %}
-        <div class="col-md-4">  
+        <div class="col-md-4"> 
             <div class="section-box" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5),
              rgba(255, 255, 255, 0.5)), url('{{ book.image }}');background-size: cover;
               background-position: center; min-height: 350px; max-width: 300px;">
                 <h4 style="text-align: center;">{{ book.title }}</h4>
                 <p >Author: {{ book.author }}</p>
-            </div>
+                <a class="btn btn-danger btn-sm" href="{{ url_for('delete_book', book_id = book.id)}}">Delete</a>
           </div>
+        </div>
+          
           {% if loop.index % 3 == 0 %}
-            </div><div class="row">
+            </div>
+            <br>
+            <div class="row">
           {% endif %}
         {% endfor %}
       </div>
+
     {% else %}
         <p>No books found in this section.</p>
     {% endif %}
     <br>
-    <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">Back</a>
+    <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary" style="margin-top: 20px;">Back</a>
     </div>
     {% include 'footer.html' %}
 </body>

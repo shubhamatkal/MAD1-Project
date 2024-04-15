@@ -23,9 +23,7 @@
           <button type="submit" class="btn btn-secondary " style="margin-left: 15px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
             class="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-
-              .001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.
-              1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"></path>
             </svg>
           </button>
         </div>
@@ -47,19 +45,21 @@
     <ul>
       {% for book in book_requests %}
       <li>
-        <h2>{{ book["book_title"] }}</h2>
-        <p>{{book["user_id"]}}</p>
-        <p>{{book["id"]}}</p>
-        <a href="{{ url_for('view_details', r_id=book['id']) }}" class="btn-view">View</a>
-        <a href="{{ url_for('grantboooks', r_id=book['id']) }}" class="btn-grant">Grant</a>
-        <a href="{{ url_for('rejectbooks', r_id=book['id']) }}" class="btn-reject">Reject</a>
+        <h2>Book Name: {{ book["book_title"] }}</h2>
+        <p>Username: {{book['username']}}</p>
+        <p>User id: {{book["user_id"]}}</p>
+        <p>Request id: {{book["id"]}}</p>
+        <a href="{{ url_for('view_details', r_id=book['id']) }}" class="btn-view btn btn-primary">View</a>
+        <a href="{{ url_for('grantboooks', r_id=book['id']) }}" class="btn-grant btn btn-primary">Grant</a>
+        <a href="{{ url_for('rejectbooks', r_id=book['id']) }}" class="btn-reject btn btn-secondary">Reject</a>
       </li>
+      <hr>
       {% endfor %}
       {% if book_requests|length == 0 %}
       <li>There are no book requests.</li>
       {% endif %}
     </ul>
-    <a href="{{ url_for('librarian_dashboard') }}">Back to Librarian Dashboard</a>
+    <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary" style="margin-top: 50px;">Back to Librarian Dashboard</a>
   </div>
   {% include 'footer.html' %}
 </body>

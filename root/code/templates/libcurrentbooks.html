@@ -23,8 +23,7 @@
 			{% endwith %}
 		</div>
 		<br>
-		<h1>Current Books</h1>
-		<br>    
+		<h1>Current Books</h1>  
 		<div class="text-center mt-5 d-flex justify-content-center align-items-center me-md-auto">
 			<form class="w-25 me-2" role="search" action="" method="post">
 				<div class="d-flex">
@@ -80,7 +79,7 @@
 		{% else %}
 			<p>There are no current books.</p>
 		{% endif %}
-		<a href="{{ url_for('librarian_dashboard') }}">Back to Librarian Dashboard</a>
+		<a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">Back</a>
 	</div>
 	{% include 'footer.html' %}
 </body>

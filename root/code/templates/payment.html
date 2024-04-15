@@ -11,28 +11,32 @@
 <body>
   {% include 'header-user.html' %}
   <div class="mainbody">
-	{% if flash_message %}
-		<div class="flash-message">
-			{{ flash_message }}
-		</div>
-	{% endif %}
-	<br>
-	<h1>Book Payment</h1>
-	<h2>Book Details</h2>
-	<p>Title: {{bookDetails.title}}</p>
-	<p>Author: {{bookDetails.author}}</p>
-	<p>Price: {{bookDetails.price}}</p>
-	<h2>User Details</h2>
-	<p>Name: {{userDetails.name}}</p>
-	<p>User ID: {{userDetails.email}}</p>
-	<h2>Payment Form</h2>
-	<form action="" method="POST">
-		<p>Are you sure to make payment for this book, 
-			after making the payment you will get pdf of this book.</p>
+		{% if flash_message %}
+			<div class="flash-message">
+				{{ flash_message }}
+			</div>
+		{% endif %}
 		<br>
-		<input type="submit" value="Pay">
-	</form>
-	</div>
+		<h1>Book Payment</h1>
+		<h2>Book Details</h2>
+		<p>Title: {{bookDetails.title}}</p>
+		<p>Author: {{bookDetails.author}}</p>
+		<p>Price: {{bookDetails.price}}</p>
+		<h2>User Details</h2>
+		<p>Student Name: {{userDetails.name}}</p>
+		<p>User ID: {{userDetails.user_id}}</p>
+		<h2>Payment Form</h2>
+		<form action="" method="POST">
+			<p>Are you sure to make payment for this book, 
+				after making the payment you will get pdf of this book.</p>
+			<br>
+			<div style="display: inline-block;">
+			<input class="btn btn-primary" type="submit" value="Pay">
+			<a style="margin-left: 30px;" class="btn btn-secondary" href="{{url_for('user_books')}}">Cancel</a>
+			</div>
+		</form>
+
+  </div>
 	{% include 'footer.html' %}
 </body>
 </html>

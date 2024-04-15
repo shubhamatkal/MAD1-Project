@@ -67,6 +67,7 @@
         </div>
         {% if loop.index % 3 == 0 %}
       </div>
+      <br>  
       <div class="row">
         {% endif %}
         {% endfor %}
@@ -78,7 +79,7 @@
       {% endif %}
     </div>
     <div class="text-center">
-      <a href="{{url_for('add_section')}}" class="btn btn-primary">Add Section</a>
+      <a href="{{url_for('add_section')}}" class="btn btn-primary" style="margin-top: 10px;">Add Section</a>
     </div>
   </div>
   {% include 'footer.html' %}

@@ -14,9 +14,8 @@
 	<div class="mainbody">
 		<div class="row">
 			<div class="col-md-6">
-				<!-- First div content here -->
 				<table class="graph">
-					<caption>Section wise Books Read</caption>
+					<caption>▶️ Section wise Books Read</caption>
 					<thead>
 						<tr>
 							<th scope="col">Sections</th>
@@ -35,13 +34,7 @@
 			</div>
 			<div class="col-md-6">
 					<table class="graph">
-						<caption>Books Available vs Books Read vs Downloaded:</caption>
-						<thead>
-							<tr>
-								<th scope="col"> </th>
-								<th scope="col">Number of Books</th>
-							</tr>
-						</thead>
+						<caption>▶️ Books Available vs Books Read vs Downloaded:</caption>
 						<tbody>
 							{% for section, value in userstats.items() %}
 								<tr style="height: {{ value }} ">
@@ -54,10 +47,10 @@
 			</div>
 		</div>
 		<br><br><br><br><br><br>
-		<div class="row">
+		<div class="row" >
 			<div class="col-md-6">
-				<h2>Most Read Books</h2>
-				<table>
+				<h2>▶️ Most Read Books</h2>
+				<table class="table table-scroll table-striped">
 					<thead>
 						<tr>
 							<th scope="col">Book Title</th>
@@ -74,13 +67,16 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="col-md-6">
-				<h2>Your Percentage of Books Read:{{user_percentage['Percentage of Books Read']}}</h2>
-				<h2>Read Index: {{user_percentage['Read Index']}}</h2>
-				<p>There were Total: {{user_percentage['Total']}} from which you have read 
-					{{user_percentage['Books Read']}}</p>
+			<div class="col-md-6" >
+				<h2>▶️ Some other Stats:</h2>
+				<br>
+				<h3>Your Percentage of Books Read:{{user_percentage['Percentage of Books Read']}} %</h3>
+				<h3>Read Index: {{user_percentage['Read Index']}}</h3>
+				<p>There were Total: {{user_percentage['Total']}} books from which you have read 
+					{{user_percentage['Books Read']}} book.</p>
 			</div>		
 		</div>
+	</div>
 	{% include 'footer.html' %}
 </body>
 </html>

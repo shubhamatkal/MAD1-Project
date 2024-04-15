@@ -12,7 +12,19 @@
   {% include 'header-lib.html' %}
   <div class="mainbody">
     <h1>View Details</h1>
-    <p>Request Info: {{ request_info }}</p>
+    <br>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <p><strong>Request ID:</strong> {{ request_info.id }}</p>
+          <p><strong>Title:</strong> {{ request_info.book_title }}</p>
+          <p><strong>Author:</strong> {{ request_info.author }}</p>
+          <p><strong>User ID:</strong> {{ request_info.user_id }}</p>
+        </div>
+      </div>
+      <a class="btn btn-secondary" href="{{url_for('bookrequests')}}">Back</a>
+
+    </div>
   </div>
   {% include 'footer.html' %}
 </body>

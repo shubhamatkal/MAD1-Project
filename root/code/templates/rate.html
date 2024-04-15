@@ -14,27 +14,29 @@
 	<div class="book-details">
 		<h1>Book Title: {{ book.title }}</h1>
 		<h2>Book Author: {{ book.author }}</h2>
-		<img src="{{ book.image }}" alt="Book Image">
+		<img src="{{ book.image }}"  style="width: 150px; height: 250px;"  alt="Book Image">
 	</div>
 	<form action="" method="POST">
 		<input type="hidden" name="book_id" value="{{ book.id }}">
 		<div class="rating">
 			<input type="radio" id="star5" name="rating" value="5">
-			<label for="star5" title="5 stars">5 stars</label>
+			<label for="star5" title="5 stars">⭐⭐⭐⭐⭐</label>
 			<input type="radio" id="star4" name="rating" value="4">
-			<label for="star4" title="4 stars">4 stars</label>
+			<label for="star4" title="4 stars">⭐⭐⭐⭐</label>
 			<input type="radio" id="star3" name="rating" value="3">
-			<label for="star3" title="3 stars">3 stars</label>
+			<label for="star3" title="3 stars">⭐⭐⭐</label>
 			<input type="radio" id="star2" name="rating" value="2">
-			<label for="star2" title="2 stars">2 stars</label>
+			<label for="star2" title="2 stars">⭐⭐</label>
 			<input type="radio" id="star1" name="rating" value="1">
-			<label for="star1" title="1 star">1 star</label>
+			<label for="star1" title="1 star">⭐</label>
 		</div>
 		<div class="review">
+			<div>
 			<label for="review">Review:</label>
+			</div>
 			<textarea id="review" name="review" rows="4" cols="50"></textarea>
 		</div>
-		<button type="submit">Submit</button>
+		<button class="btn btn-primary" type="submit">Submit</button>
 	</form>
   </div>
   {% include 'footer.html' %}

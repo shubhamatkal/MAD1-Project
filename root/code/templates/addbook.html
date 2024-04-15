@@ -11,7 +11,7 @@
     <div class="mainbody">
       <div id="form-body">
         <h2>Add Book</h2>
-        <form action="" method="POST"></form>
+        <form action="" method="POST">
           <div class="mb-3">
             <label for="bookTitle" class="form-label">Book Name<span style="color: red;">*</span>:</label>
             <input class="form-control" type="text" id="bookTitle" name="bookTitle" \
@@ -34,7 +34,7 @@
             <label for="content" class="form-label">Book Description:</label>
             <textarea class="form-control" id="Description" name="Description"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary">Add Book</button>
+          <button type="submit" class="btn btn-primary" style="margin-bottom: 5px;">Add Book</button>
         </form>
         <br>
         <a class="btn btn-secondary" href="{{url_for('librarian_dashboard')}}">Back to Dashboard</a>

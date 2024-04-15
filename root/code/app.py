@@ -228,7 +228,8 @@ def user_books():
     book_requests = UserBook.query.filter_by(user_id=user_id, status='requested').all()
     for request in book_requests:
         book = Book.query.get(request.book_id)
-        section_ = Section.query.get(book.section_id)
+        section__ = Section.query.get(book.section_id)
+        section_ = section__.section_title
         if book:
             book_dict = {
                 'title': book.book_title,
@@ -417,7 +418,7 @@ def rate():
             return redirect(url_for('user_books'))
     book_id = request.args.get('book_id')
     if UserBook.query.filter_by(user_id=user_id, 
-                                book_id=book_id, status='completed', rating="").first():
+                                book_id=book_id, status='completed', rating=None).first():
         book = Book.query.get(book_id)
         if not book:
             flash('Book not found')
@@ -460,7 +461,7 @@ def user_stats():
     total_books = len(Book.query.all())
     total_books_purchased = len(UserBook.query.filter_by(user_id=user_id, paid=True, status = 'completed').all())
     + len(UserBook.query.filter_by(user_id=user_id, paid=True, status = 'accepted').all())
-    percentage_of_books_read = (total_books_read/total_books) * 100
+    percentage_of_books_read = round((total_books_read/total_books) * 100,2)
     user_stats = {
         'Books Available': total_books,
         'Books Read': total_books_read,
@@ -480,7 +481,7 @@ def user_stats():
         avg_days_ = 10
     if avg_days < 10:
         avg_days_ = avg_days
-    read_index = (percentage_of_books_read/1000) * avg_days_
+    read_index = round((percentage_of_books_read/1000) * avg_days_, 2)
     user_percentage = {
         'Total': total_books,
         'Books Read': total_books_read,
@@ -488,7 +489,7 @@ def user_stats():
         'Read Index': read_index
     }
     Most = UserBook.query.filter_by(user_id=user_id, status='completed').all()
-    Most_read_books = Most.order_by(UserBook.times_read.desc()).limit(5)
+    Most_read_books = UserBook.query.order_by(UserBook.times_read.desc()).limit(5).all()
     most_read_books = {}
     for book in Most_read_books:
         book_ = Book.query.get(book.book_id)
@@ -587,21 +588,25 @@ def bookrequests():
                     request_dict = {
                         'id': request_.id,
                         'book_title': book_title,
-                        'user_id': request_.user_id
+                        'user_id': request_.user_id,
+                        'username': User.query.get(request_.user_id).username
                     }
                     book_request_list.append(request_dict)
                     section_name = Section.query.get(Book.query.get(request_.book_id).section_id).section_title
-                    sections_list.append(section_name)
+                    if section_name not in sections_list:
+                        sections_list.append(section_name)
         else:
             book_title = Book.query.get(request_.book_id).book_title
             request_dict = {
                 'id': request_.id,
                 'book_title': book_title,
-                'user_id': request_.user_id
+                'user_id': request_.user_id,
+                'username' : User.query.get(request_.user_id).username
             }
             book_request_list.append(request_dict)
             section_name = Section.query.get(Book.query.get(request_.book_id).section_id).section_title
-            sections_list.append(section_name)
+            if section_name not in sections_list:
+                sections_list.append(section_name)
     libinfo_ = Librarian.query.get(session['lib_id'])
     libinfo = {"Name": libinfo_.libraryname}
     return render_template('bookrequests.html',libinfo = libinfo, 
@@ -737,7 +742,8 @@ def show_books():
             'title': book.book_title,
             'author': book.author,
             'content': book.description,
-            'image': book.Image
+            'image': book.Image,
+            'id' : book.id
         }
         book_list.append(book_dict)
     libinfo_ = Librarian.query.get(session['lib_id'])
@@ -767,6 +773,18 @@ def view_details():
     else:
         flash('Invalid request ID')
         return redirect(url_for('bookrequests'))
+
+@app.route('/library/deletebook')
+def delete_book():
+    if 'lib_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('librarian_login'))
+    book_id = request.args.get('book_id')
+    Book.query.filter_by(id=book_id).delete()
+    UserBook.query.filter_by(book_id=book_id).delete()
+    BookRequests.query.filter_by(book_id=book_id).delete()
+    db.session.commit()
+    return redirect(url_for('librarian_dashboard'))
 
 @app.route('/library/grantboooks')
 def grantboooks():
@@ -876,7 +894,7 @@ def library_stats():
         if UserBook.query.filter_by(user_id=user.id, status='completed').first():
             active_users += 1
     most_liked_section = max(section_books, key=section_books.get)
-    most_read_book = max(books_stats, key=books_stats.get)
+    most_read_book = Book.query.get(UserBook.query.order_by(UserBook.times_read.desc()).first().book_id).book_title
     top_rated_books = UserBook.query.filter_by(status='completed').order_by(UserBook.rating.desc()).limit(5)
     top_rated_books_ = {}
     for book in top_rated_books:
