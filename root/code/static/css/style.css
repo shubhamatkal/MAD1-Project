@@ -30,3 +30,8 @@ body {
     background-size: cover; 
     padding: 20px; 
 }
+
+.backgroundimage {
+    background-image: url('https://www.jesusislife.in/wp-content/uploads/2019/05/Savin-NY-Website-Background-Web.jpg');
+    background-size: cover;
+}

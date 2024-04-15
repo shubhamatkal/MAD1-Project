@@ -64,7 +64,8 @@ instance_path = os.path.join(app.root_path, 'instance')
 if not os.path.exists(instance_path):
     os.makedirs(instance_path)
 db_uri = 'sqlite:///' + os.path.join(instance_path, 'db.sqlite3')
-app.config['SQLALCHEMY_DATABASE_URI'] = db_uri  
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri 
+app.config['SECRET_KEY'] = '7219357419' 
 
 #database initialization
 db.init_app(app)
