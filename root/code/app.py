@@ -120,6 +120,21 @@ def user_dashboard():
     book_list = []
     section_list = []
     for book in books:
+        book_id = book.id
+        avg_rating = UserBook.query.filter_by(book_id=book_id, status = 'completed').all()
+        if avg_rating:
+            avg_rating_ = 0
+            n = 0
+            for rating in avg_rating:
+                if rating.rating != "":
+                    avg_rating_ += int(rating.rating)
+                    n += 1
+            if n != 0:
+                avg_rating = avg_rating_/n
+            else:
+                avg_rating = "Error"
+        else:
+            avg_rating = "-"
         section = Section.query.get(book.section_id)
         if search_keyword != "sample":
             if search_keyword != None:
@@ -129,7 +144,8 @@ def user_dashboard():
                         'title': book.book_title,
                         'section': section.section_title,
                         'author': book.author,
-                        'id': book.id
+                        'id': book.id,
+                        'rating': avg_rating
                         }
                     book_list.append(book_dict)
         else:
@@ -138,7 +154,8 @@ def user_dashboard():
                 'title': book.book_title,
                 'section': section.section_title,
                 'author': book.author,
-                'id': book.id
+                'id': book.id,
+                'rating': avg_rating
             }
             book_list.append(book_dict)
     #for sections 
@@ -224,12 +241,18 @@ def user_books():
     for user_book in user_books:
         book = Book.query.get(user_book.book_id)
         section_ = Section.query.get(book.section_id)
+        your_rating_ = user_book.rating
+        if your_rating_ == None:
+            your_rating = "Not Rated"
+        else:
+            your_rating = your_rating_
         if book:
             book_dict = {
                 'title': book.book_title,
                 'section': section_.section_title,
                 'author': book.author,
-                'id': book.id
+                'id': book.id,
+                'rating': your_rating
             }
             completed_books.append(book_dict)
     print(completed_books, "this is completed books")
@@ -364,6 +387,47 @@ def view_book():
     book_link = book.link
     return render_template('viewbook.html', pdfLink=book_link)    
     
+
+@app.route('/user/ratebook', methods=['GET', 'POST'])
+def rate():
+    if 'user_id' not in session:
+        flash('Please login to continue')
+        return redirect(url_for('user_login'))
+    user_id = session['user_id']
+    if request.method == 'POST':
+        book_id = request.form.get('book_id')
+        user_id = user_id
+        rating = request.form.get('rating')
+        user_book = UserBook.query.filter_by(user_id=user_id, book_id=book_id, status = 'completed').first()
+        if user_book:
+            user_book.rating = rating
+            user_book.review = request.form.get('review')
+            db.session.commit()
+            return redirect(url_for('user_books'))
+    book_id = request.args.get('book_id')
+    
+    if UserBook.query.filter_by(user_id=user_id, book_id=book_id, status='completed', rating="").first():
+        book = Book.query.get(book_id)
+        if not book:
+            flash('Book not found')
+            return redirect(url_for('user_dashboard'))
+        book = {
+            'id': book.id,
+            'title': book.book_title,
+            'author': book.author,
+            'image': book.Image
+        }
+        user_id = session['user_id']
+        user = User.query.get(user_id)
+        firstname_ = user.firstname
+        userinfo = {"Name": firstname_, 'userid': user_id}
+        print("rendering rate")
+        return render_template('rate.html', book=book, userinfo=userinfo)
+    else:
+        flash('Book already rated')
+        return redirect(url_for('user_books'))
+
+
 @app.route('/user/stats')
 def user_stats():
     if 'user_id' not in session:
@@ -811,9 +875,6 @@ def library_stats():
     total_books_purchased = len(UserBook.query.filter_by(paid = True).all())
     total_books_requested = len(BookRequests.query.all())
     total_books_granted = len(UserBook.query.filter_by(status='accepted').all())
-    total_books_rejected = len(BookRequests.query.all()) - total_books_granted
-    total_books_returned = len(UserBook.query.filter_by(status='completed').all())
-    total_books_current = len(UserBook.query.filter_by(status='accepted').all())
     lib_info = {"Name": libname}
     #section wise books published
     sections = {}
@@ -829,7 +890,6 @@ def library_stats():
     books_stats['Books Granted'] = total_books_granted
 
     # list all total registered users , active users
-    total_users = len(User.query.all())
     users_list = User.query.all()
     users_list_ = {}
     for user in users_list:
@@ -845,7 +905,22 @@ def library_stats():
     most_liked_section = max(section_books, key=section_books.get)
     most_read_book = max(books_stats, key=books_stats.get)
     
-    return render_template('stats-lib.html', libinfo = lib_info,sections= sections, books_stats = books_stats,users_list = sorted_users_list, active_users = active_users, most_liked_section = most_liked_section, most_read_book = most_read_book)
+    #top rated books
+    top_rated_books = UserBook.query.filter_by(status='completed').order_by(UserBook.rating.desc()).limit(5)
+    top_rated_books_ = {}
+    for book in top_rated_books:
+        book_ = Book.query.get(book.book_id)
+        top_rated_books_[book_.book_title] = book.rating
+    #all availbe user reviews
+    user_reviews = UserBook.query.filter_by(status='completed').all()
+    user_reviews_ = {}
+    for review in user_reviews:
+        if review.review != "":
+            user_ = User.query.get(review.user_id)
+            user_name = user_.firstname
+            book_ = Book.query.get(review.book_id)
+            user_reviews_[book_.book_title] = [review.review, user_name]
+    return render_template('stats-lib.html',top_rated_books = top_rated_books_,user_reviews = user_reviews_ ,  libinfo = lib_info,sections= sections, books_stats = books_stats,users_list = sorted_users_list, active_users = active_users, most_liked_section = most_liked_section, most_read_book = most_read_book)
 
 
 @app.route('/forgot_password')

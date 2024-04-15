@@ -76,6 +76,7 @@
                         <th>Title</th>
                         <th>Section</th>
                         <th>Author</th>
+                        <th>Your Rating</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -87,7 +88,10 @@
                                 <td>{{ book["title"] }}</td>
                                 <td>{{ book["section"] }}</td>
                                 <td>{{ book["author"] }}</td>
-                                <td><a href="{{ url_for('view_book', book_id=book['id']) }}">View</a></td>
+                                <td>{{ book["rating"] }}</td>
+                                <td><a href="{{ url_for('view_book', book_id=book['id']) }}">View</a>
+                                    <a href="{{url_for('rate', book_id=book['id'])}}">Rate</a>
+                                </td>
                             </tr>
                         {% endfor %}
                     {% else %}

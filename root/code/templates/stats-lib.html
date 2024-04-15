@@ -56,10 +56,11 @@
 		</div>
 	</div>
 	<br><br><br><br><br><br>
+	<hr>
 	<div class="row">
 		<div class="col-md-6">
 			<h2>Users List</h2>
-			<table>
+			<table class="table table-scroll table-striped">
 				<thead>
 					<tr>
 						<th scope="col">Usernames</th>
@@ -81,6 +82,53 @@
 			<h2>Most Read Book:{{most_read_book}}</h2>
 			<h2>Total Active Students:{{active_users}}</h2>
 		</div>		
+
+	</div>
+	<br>
+	<hr>
+	<div class="row">
+		<div class="col-md-6">
+			<h2>Top Rated Books:</h2>
+			<table class="table table-scroll table-striped">
+				<thead>
+					<tr>
+						<th scope="col">Book Title</th>
+						<th scope="col">Rating</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for book, rating in top_rated_books.items() %}
+						<tr>
+							<td>{{ book }}</td>
+							<td>{{ rating }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>	
+		</div>
+	
+		<div class="col-md-6">
+			<h2>User Reviews</h2>
+			<table class="table table-scroll table-striped">
+				<thead>
+					<tr>
+						<th scope="col">Book Title</th>
+						<th scope="col">User</th>
+						<th scope="col">User Review</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for book, review in user_reviews.items() %}
+						<tr>
+							<td>{{ book }}</td>
+							<td>{{ review[1] }}</td>
+							<td>{{ review[0] }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 	</div>
 	{% include 'footer.html' %}
 </body>
