@@ -365,7 +365,6 @@ def download_book():
         book_link = book.link
         return redirect(book_link)        
     if UserBook.query.filter_by(user_id=user_id, book_id=book_id).first().paid == False:
-        flash('Please pay for the book before downloading')
         bookDetails = {
             'book_id': book_id,
             'title': book.book_title,
@@ -713,11 +712,17 @@ def add_book():
         book_title = request.form.get('bookTitle')
         author = request.form.get('author')
         description = request.form.get('Description') #optional
-        link = request.form.get('link')
         book_image = request.form.get('bookImage')
+        pdf_file = request.files['pdfFile']
+        books_folder = os.path.join(app.root_path, 'static', 'books')
+        if not os.path.exists(books_folder):
+            os.makedirs(books_folder)
+        book_name = request.form.get('bookTitle').replace(" ", "")
+        pdf_file.save(os.path.join(books_folder, f'{book_name}.pdf'))
+        book_link = f'/static/books/{book_name}.pdf'
         new_book = Book(section_id=section_id, book_title=book_title,
-                         author=author, description=description, 
-                         date_created=date.today(), Image=book_image, link = link)
+                        author=author, description=description, 
+                        date_created=date.today(), Image=book_image, link=book_link)
         db.session.add(new_book)
         db.session.commit()
         return redirect(url_for('librarian_dashboard'))
@@ -780,6 +785,10 @@ def delete_book():
         flash('Please login to continue')
         return redirect(url_for('librarian_login'))
     book_id = request.args.get('book_id')
+    book_name = Book.query.get(book_id).book_title.replace(" ", "")
+    book_file_path = os.path.join(app.root_path, 'static', 'books', f'{book_name}.pdf')
+    if os.path.exists(book_file_path):
+        os.remove(book_file_path)
     Book.query.filter_by(id=book_id).delete()
     UserBook.query.filter_by(book_id=book_id).delete()
     BookRequests.query.filter_by(book_id=book_id).delete()
